@@ -42,7 +42,7 @@ c_exception_SOURCES = \
 		c_exception.c c_exception.h
 
 c_exception_test_SOURCES = \
-		c_exeption.c c_exeption.h \
+		$(c_exception_SOURCES) \
 		c_exception_test.c \
 		unit_test.h
 

@@ -19,7 +19,7 @@
 ##
 
 ACLOCAL_AMFLAGS = -I m4
-SUBDIRS = lib src test
+SUBDIRS = lib src
 
 EXTRA_DIST =	bootstrap \
 		Doxyfile \

@@ -25,7 +25,6 @@
 // standard
 #include <assert.h>
 #include <attribute.h>
-#include <stdarg.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -41,16 +40,6 @@
 #else
 # error "Don't know how to declare thread-local variables on this platform."
 #endif
-
-#ifndef unreachable
-# if defined( _MSC_VER )
-#   define unreachable()          __assume( false )
-# elif defined( __GNUC__ )
-#   define unreachable()          __builtin_unreachable()
-# else
-    _Noreturn static inline void unreachable() { }
-# endif
-#endif /* unreachable */
 
 // local functions
 _Noreturn

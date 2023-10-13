@@ -40,7 +40,7 @@ endif
 AM_CPPFLAGS =	-I$(top_srcdir)/lib -I$(top_builddir)/lib
 LDADD =		$(top_builddir)/lib/libgnu.a
 
-c_exception_SOURCES = \
+libc_exception_a_SOURCES = \
 		c_exception.c c_exception.h
 
 c_exception_test_SOURCES = \

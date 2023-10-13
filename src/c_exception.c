@@ -95,7 +95,7 @@ static void cx_do_throw( void ) {
   if ( cx_try_block_head == NULL )
     cx_terminate();
   cx_try_block_head->state = CX_THROWN;
-  longjmp( cx_try_block_head->j_buf, cx_exception.xid );
+  longjmp( cx_try_block_head->env, cx_exception.xid );
 }
 
 ////////// extern public functions ////////////////////////////////////////////

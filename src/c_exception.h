@@ -104,7 +104,7 @@ typedef bool (*cx_xid_matcher_t)( int xid1, int xid2 );
 #define cx_try                                          \
   for ( cx_impl_try_block_t cx_tb = cx_impl_try_init(); \
         cx_impl_try_condition( &cx_tb ); )              \
-    if ( cx_tb.state == CX_TRY && (cx_tb.xid = setjmp( cx_tb.j_buf )) == 0 )
+    if ( cx_tb.state == CX_TRY && (cx_tb.xid = setjmp( cx_tb.env )) == 0 )
 
 /**
  * Begins a `catch` block possibly catching an exception and executing the code
@@ -292,7 +292,7 @@ typedef struct cx_impl_try_block cx_impl_try_block_t;
  * TODO
  */
 struct cx_impl_try_block {
-  jmp_buf               j_buf;          ///< Jump buffer.
+  jmp_buf               env;            ///< Jump buffer.
   cx_impl_try_block_t  *parent;         ///< Enclosing parent `try`, if any.
   cx_impl_state_t       state;          ///< Current state.
   int                   xid;            ///< Thrown exception ID, if any.

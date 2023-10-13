@@ -42,6 +42,7 @@ static unsigned   test_failures;
 #define TEST_XID_02  0x0102
 
 static bool test_no_throw( void ) {
+  TEST_FN_BEGIN();
   unsigned n_try = 0, n_catch = 0, n_finally = 0;
   cx_try {
     ++n_try;
@@ -52,10 +53,14 @@ static bool test_no_throw( void ) {
   cx_finally {
     ++n_finally;
   }
-  return n_try == 1 && n_catch == 0 && n_finally == 1;
+  TEST( n_try == 1 );
+  TEST( n_catch == 0 );
+  TEST( n_finally == 1 );
+  TEST_FN_END();
 }
 
 static bool test_throw_catch_1( void ) {
+  TEST_FN_BEGIN();
   unsigned n_try = 0, n_catch_1 = 0, n_catch_2 = 0, n_finally = 0;
   cx_try {
     ++n_try;
@@ -70,10 +75,15 @@ static bool test_throw_catch_1( void ) {
   cx_finally {
     ++n_finally;
   }
-  return n_try == 1 && n_catch_1 == 1 && n_catch_2 == 0 && n_finally == 1;
+  TEST( n_try == 1 );
+  TEST( n_catch_1 == 1 );
+  TEST( n_catch_2 == 0 );
+  TEST( n_finally == 1 );
+  TEST_FN_END();
 }
 
 static bool test_throw_catch_2( void ) {
+  TEST_FN_BEGIN();
   unsigned n_try = 0, n_catch_1 = 0, n_catch_2 = 0, n_finally = 0;
   cx_try {
     ++n_try;
@@ -88,22 +98,11 @@ static bool test_throw_catch_2( void ) {
   cx_finally {
     ++n_finally;
   }
-  return n_try == 1 && n_catch_1 == 0 && n_catch_2 == 1 && n_finally == 1;
-}
-
-static bool test_throw_finally( void ) {
-  unsigned n_try = 0, n_catch = 0, n_finally = 0;
-  cx_try {
-    ++n_try;
-    cx_throw( TEST_XID_01 );
-  }
-  cx_catch ( TEST_XID_01 ) {
-    ++n_catch;
-  }
-  cx_finally {
-    ++n_finally;
-  }
-  return n_try == 1 && n_catch == 1 && n_finally == 1;
+  TEST( n_try == 1 );
+  TEST( n_catch_1 == 0 );
+  TEST( n_catch_2 == 1 );
+  TEST( n_finally == 1 );
+  TEST_FN_END();
 }
 
 static void test_nested_throw( int xid ) {
@@ -111,6 +110,7 @@ static void test_nested_throw( int xid ) {
 }
 
 static bool test_nested_throw_catch( void ) {
+  TEST_FN_BEGIN();
   unsigned n_try = 0, n_catch = 0, n_finally = 0;
   cx_try {
     ++n_try;
@@ -122,7 +122,10 @@ static bool test_nested_throw_catch( void ) {
   cx_finally {
     ++n_finally;
   }
-  return n_try == 1 && n_catch == 1 && n_finally == 1;
+  TEST( n_try == 1 );
+  TEST( n_catch == 1 );
+  TEST( n_finally == 1 );
+  TEST_FN_END();
 }
 
 int main( int argc, char const *argv[] ) {
@@ -132,7 +135,6 @@ int main( int argc, char const *argv[] ) {
   TEST( test_no_throw() );
   TEST( test_throw_catch_1() );
   TEST( test_throw_catch_2() );
-  TEST( test_throw_finally() );
   TEST( test_nested_throw_catch() );
 
   printf( "%u failures\n", test_failures );

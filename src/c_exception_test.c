@@ -19,7 +19,9 @@
 */
 
 // local
+#include "config.h"                     /* must go first */
 #include "c_exception.h"
+#include "unit_test.h"
 
 // standard
 #include <stdio.h>
@@ -44,7 +46,7 @@ static bool test_no_throw( void ) {
   cx_try {
     ++n_try;
   }
-  cx_catch ( TEST_XID_01 ) {
+  cx_catch( TEST_XID_01 ) {
     ++n_catch;
   }
   cx_finally {
@@ -124,7 +126,9 @@ static bool test_nested_throw_catch( void ) {
 }
 
 int main( int argc, char const *argv[] ) {
+  (void)argc;
   me = argv[0];
+
   TEST( test_no_throw() );
   TEST( test_throw_catch_1() );
   TEST( test_throw_catch_2() );

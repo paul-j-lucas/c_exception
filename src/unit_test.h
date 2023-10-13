@@ -34,7 +34,7 @@
  * @return Always returns `false`.
  */
 #define FAILED(EXPR) \
-  ( EPRINTF( "%s:%d: " EXPR "\n", me, __LINE__ ), !++test_failures )
+  ( fprintf( stderr, "%s:%d: " EXPR "\n", me, __LINE__ ), !++test_failures )
 
 /**
  * Tests \a EXPR and prints that it failed only if it failed.

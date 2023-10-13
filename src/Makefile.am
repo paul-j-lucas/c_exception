@@ -18,10 +18,12 @@
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-LIBRARIES =	c_exception
+noinst_LIBRARIES =	libc_exception.a
 check_PROGRAMS=	c_exception_test
 
 AM_CFLAGS =	$(C_EXCEPTION_CFLAGS)
+
+c_exception_test_LDADD = libc_exception.a
 
 if ENABLE_ASAN
 AM_CFLAGS +=	-fsanitize=address -fno-omit-frame-pointer

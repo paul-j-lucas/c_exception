@@ -104,7 +104,7 @@ typedef bool (*cx_xid_matcher_t)( int xid1, int xid2 );
 #define cx_try                                          \
   for ( cx_impl_try_block_t cx_tb = cx_impl_try_init(); \
         cx_impl_try_condition( &cx_tb ); )              \
-    if ( cx_tb.state == CX_TRY && (cx_tb.xid = setjmp( cx_tb.env )) == 0 )
+    if ( cx_tb.state == CX_TRY && setjmp( cx_tb.env ) == 0 )
 
 /**
  * Begins a `catch` block possibly catching an exception and executing the code

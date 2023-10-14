@@ -21,11 +21,34 @@
 #ifndef C_EXCEPTION_H
 #define C_EXCEPTION_H
 
+/**
+ * @file
+ * Declares types, macros, and functions to implement C++-like exception
+ * handling in C.
+ */
+
 // standard
 #include <setjmp.h>
 #include <stdbool.h>
 
-#ifdef CX_USE_TRADITIONAL_KEYWORDS
+#if !defined(CX_USE_TRADITIONAL_KEYWORDS)
+  /**
+   * If defined to 1, allows use of traditional keywords in addition to the
+   * default.
+   *
+   * Default         | Traditional
+   * ----------------|------------
+   * \ref cx_try     | `try`
+   * \ref cx_catch   | `catch`
+   * \ref cx_throw   | `throw`
+   * \ref cx_finally | `finally`
+   *
+   * Defaults to 0 to avoid possible collisons with other identifiers.
+   */
+# define CX_USE_TRADITIONAL_KEYWORDS    0
+#endif /* CX_USE_TRADITIONAL_KEYWORDS */
+
+#if !defined(__cplusplus) && CX_USE_TRADITIONAL_KEYWORDS
 # define try                      cx_try
 # define catch(...)               cx_catch( __VA_ARGS__ )
 # define finally                  cx_finally
@@ -33,6 +56,17 @@
 #endif /* CX_USE_TRADITIONAL_KEYWORDS */
 
 ///////////////////////////////////////////////////////////////////////////////
+
+#ifdef __cplusplus
+// While this C library would never be used in a pure C++ program, it may be
+// used in a program with both C and C++ code.
+extern "C" {
+#endif /* __cplusplus */
+
+/**
+ * @defgroup c-exception-public-api-group Public API.
+ * Declares types, macros, and functions for public use.
+ */
 
 /**
  * Contains information about a thrown exception.
@@ -44,7 +78,8 @@ struct cx_exception {
   /// The line number within \ref file whence the exception was thrown.
   int         line;
 
-  int         thrown_xid;               ///< The exception ID that was thrown.
+  /// The exception ID that was thrown.
+  int         thrown_xid;
 };
 typedef struct cx_exception cx_exception_t;
 
@@ -137,7 +172,7 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
 #define cx_try                                          \
   for ( cx_impl_try_block_t cx_tb = cx_impl_try_init(); \
         cx_impl_try_condition( &cx_tb ); )              \
-    if ( cx_tb.state != CX_FINALLY )                    \
+    if ( cx_tb.state != CX_IMPL_FINALLY )               \
       if ( setjmp( cx_tb.env ) == 0 )
 
 /**
@@ -176,7 +211,7 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  * @sa #cx_finally
  */
 #define cx_catch(...) \
-  CX_NAME2(CX_CATCH_, CX_ARGN(CX_COMMA __VA_ARGS__ ()))(__VA_ARGS__)
+  CX_IMPL_NAME2(CX_IMPL_CATCH_, CX_IMPL_ARGN(CX_IMPL_COMMA __VA_ARGS__ ()))(__VA_ARGS__)
 
 /**
  * Begins a `finally` block always executing the code in the block after the
@@ -231,7 +266,7 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  * @sa #cx_finally
  */
 #define cx_throw(...) \
-  CX_NAME2(CX_THROW_, CX_ARGN(CX_COMMA __VA_ARGS__ ()))(__VA_ARGS__)
+  CX_IMPL_NAME2(CX_IMPL_THROW_, CX_IMPL_ARGN(CX_IMPL_COMMA __VA_ARGS__ ()))(__VA_ARGS__)
 
 /**
  * Cancels a current `try` block in the current scope allowing you to then
@@ -300,30 +335,40 @@ cx_xid_matcher_t cx_set_xid_matcher( cx_xid_matcher_t fn );
 _Noreturn
 void cx_terminate( void );
 
+/** @} */
+
 ////////// implementation /////////////////////////////////////////////////////
 
-#define CX_ARGN(...)              CX_COUNT(__VA_ARGS__, 2, 0, 1)
-#define CX_COMMA(...)             ,
-#define CX_COUNT(_1,_2,_3,COUNT,...) COUNT
+/**
+ * @defgroup c-exception-implementation-group Implementation API.
+ * Declares types, macros, and functions for the implementation.
+ *
+ * @note Everything in the implementation API starts with either `cx_impl_` or
+ * `CX_IMPL_`.
+ */
 
-#define CX_NAME2(A,B)             CX_NAME2_HELPER(A,B)
-#define CX_NAME2_HELPER(A,B)      A##B
+#define CX_IMPL_ARGN(...)         CX_IMPL_COUNT(__VA_ARGS__, 2, 0, 1)
+#define CX_IMPL_COMMA(...)        ,
+#define CX_IMPL_COUNT(_1,_2,_3,COUNT,...) COUNT
 
-#define CX_CATCH_0()              else if ( cx_impl_catch_all( &cx_tb ) )
-#define CX_CATCH_1(XID)           else if ( cx_impl_catch( (XID), &cx_tb ) )
+#define CX_IMPL_NAME2(A,B)        CX_IMPL_NAME2_HELPER(A,B)
+#define CX_IMPL_NAME2_HELPER(A,B) A##B
 
-#define CX_THROW_0()              CX_THROW_1( cx_tb.thrown_xid )
-#define CX_THROW_1(XID)           cx_impl_throw( __FILE__, __LINE__, (XID) )
+#define CX_IMPL_CATCH_0()         else if ( cx_impl_catch_all( &cx_tb ) )
+#define CX_IMPL_CATCH_1(XID)      else if ( cx_impl_catch( (XID), &cx_tb ) )
+
+#define CX_IMPL_THROW_0()         CX_IMPL_THROW_1( cx_tb.thrown_xid )
+#define CX_IMPL_THROW_1(XID)      cx_impl_throw( __FILE__, __LINE__, (XID) )
 
 /**
  * Internal state of by \ref cx_impl_try_block.
  */
 enum cx_impl_state {
-  CX_INIT,                              ///< Initial state.
-  CX_TRY,                               ///< No exception thrown.
-  CX_THROWN,                            ///< Exception thrown, but uncaught.
-  CX_CAUGHT,                            ///< Exception caught.
-  CX_FINALLY                            ///< Running `finally` code, if any.
+  CX_IMPL_INIT,                         ///< Initial state.
+  CX_IMPL_TRY,                          ///< No exception thrown.
+  CX_IMPL_THROWN,                       ///< Exception thrown, but uncaught.
+  CX_IMPL_CAUGHT,                       ///< Exception caught.
+  CX_IMPL_FINALLY                            ///< Running `finally` code, if any.
 };
 typedef enum cx_impl_state cx_impl_state_t;
 
@@ -352,7 +397,7 @@ bool cx_impl_catch( int xid, cx_impl_try_block_t *tb );
  * Catches any exception.
  *
  * @param tb A pointer to the current \ref cx_impl_try_block.
- * @return Always returns `true` except when \a tb->state is #CX_FINALLY.
+ * @return Always returns `true` except when \a tb->state is #CX_IMPL_FINALLY.
  */
 bool cx_impl_catch_all( cx_impl_try_block_t *tb );
 
@@ -381,6 +426,13 @@ bool cx_impl_try_condition( cx_impl_try_block_t *tb );
  */
 cx_impl_try_block_t cx_impl_try_init( void );
 
+/** @} */
+
 ///////////////////////////////////////////////////////////////////////////////
+
+#ifdef __cplusplus
+} // extern "C"
+#endif /* __cplusplus */
+
 #endif /* C_EXCEPTION_H */
 /* vim:set et sw=2 ts=2: */

@@ -18,6 +18,12 @@
 **      along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @file
+ * Defines variables and functions to implement C++-like exception handling in
+ * C.
+ */
+
 // local
 #include "config.h"                     /* must go first */
 #include "c_exception.h"
@@ -30,13 +36,13 @@
 #include <stdlib.h>
 
 #if   __STDC_VERSION__ >= 202311L
-# define CX_THREAD_LOCAL          thread_local
+# define CX_IMPL_THREAD_LOCAL     thread_local
 #elif __STDC_VERSION__ >= 201112L
-# define CX_THREAD_LOCAL          _Thread_local
+# define CX_IMPL_THREAD_LOCAL     _Thread_local
 #elif defined( _MSC_VER )
-# define CX_THREAD_LOCAL          __declspec( thread )
+# define CX_IMPL_THREAD_LOCAL     __declspec( thread )
 #elif defined( __GNUC__ )
-# define CX_THREAD_LOCAL          __thread
+# define CX_IMPL_THREAD_LOCAL     __thread
 #else
 # error "Don't know how to declare thread-local variables on this platform."
 #endif
@@ -49,7 +55,7 @@ static bool cx_default_xid_matcher( int, int );
 /**
  * Current exception.
  */
-static CX_THREAD_LOCAL cx_exception_t cx_exception;
+static CX_IMPL_THREAD_LOCAL cx_exception_t cx_exception;
 
 /**
  * Current terminate handler.
@@ -60,7 +66,7 @@ static cx_terminate_handler_t cx_terminate_handler =
 /**
  * Linked list of open `try` blocks.
  */
-static CX_THREAD_LOCAL cx_impl_try_block_t *cx_try_block_head;
+static CX_IMPL_THREAD_LOCAL cx_impl_try_block_t *cx_try_block_head;
 
 /**
  * Current exception matcher function.
@@ -104,7 +110,7 @@ _Noreturn
 static void cx_do_throw( void ) {
   if ( cx_try_block_head == NULL )
     cx_terminate();
-  cx_try_block_head->state = CX_THROWN;
+  cx_try_block_head->state = CX_IMPL_THROWN;
   cx_try_block_head->thrown_xid = cx_exception.thrown_xid;
   longjmp( cx_try_block_head->env, 1 );
 }
@@ -147,22 +153,22 @@ void cx_terminate( void ) {
 
 bool cx_impl_catch( int catch_xid, cx_impl_try_block_t *tb ) {
   assert( tb != NULL );
-  if ( tb->state == CX_FINALLY )
+  if ( tb->state == CX_IMPL_FINALLY )
     return false;
-  assert( tb->state == CX_THROWN );
+  assert( tb->state == CX_IMPL_THROWN );
   assert( cx_xid_matcher != NULL );
   if ( !(*cx_xid_matcher)( tb->thrown_xid, catch_xid ) )
     return false;
-  tb->state = CX_CAUGHT;
+  tb->state = CX_IMPL_CAUGHT;
   return true;
 }
 
 bool cx_impl_catch_all( cx_impl_try_block_t *tb ) {
   assert( tb != NULL );
-  if ( tb->state == CX_FINALLY )
+  if ( tb->state == CX_IMPL_FINALLY )
     return false;
-  assert( tb->state == CX_THROWN );
-  tb->state = CX_CAUGHT;
+  assert( tb->state == CX_IMPL_THROWN );
+  tb->state = CX_IMPL_CAUGHT;
   return true;
 }
 
@@ -179,21 +185,21 @@ bool cx_impl_try_condition( cx_impl_try_block_t *tb ) {
   assert( tb != NULL );
 
   switch ( tb->state ) {
-    case CX_INIT:
+    case CX_IMPL_INIT:
       tb->parent = cx_try_block_head;
       cx_try_block_head = tb;
-      tb->state = CX_TRY;
+      tb->state = CX_IMPL_TRY;
       return true;
-    case CX_CAUGHT:
-      tb->thrown_xid = 0;               // reset for CX_FINALLY case
+    case CX_IMPL_CAUGHT:
+      tb->thrown_xid = 0;               // reset for CX_IMPL_FINALLY case
       FALLTHROUGH;
-    case CX_TRY:
-    case CX_THROWN:
+    case CX_IMPL_TRY:
+    case CX_IMPL_THROWN:
       assert( cx_try_block_head != NULL );
       cx_try_block_head = cx_try_block_head->parent;
-      tb->state = CX_FINALLY;
+      tb->state = CX_IMPL_FINALLY;
       return true;
-    case CX_FINALLY:
+    case CX_IMPL_FINALLY:
       if ( tb->thrown_xid != 0 )
         cx_do_throw();                  // rethrow uncaught exception
       return false;

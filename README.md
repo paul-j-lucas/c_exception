@@ -3,7 +3,16 @@
 ## Introduction
 
 **C Exception**
-is a library for TODO
+is a library that implements C++-like exceptions in C++
+using syntax as close as possible to C++.
+In addition to `try`, `catch`, and `throw`,
+it also offers `finally`
+since C lacks destructors.
+While the library works,
+it has stringent requirements
+and several
+restrictions.
+See the developer documentation for details.
 
 ## Installation
 
@@ -30,7 +39,7 @@ then do:
 
     make doc                            # or: make docs
 
-**Paul J. Lucas**
-San Francisco Bay Area, California, USA
+**Paul J. Lucas**  
+San Francisco Bay Area, California, USA  
 13 October 2023
 

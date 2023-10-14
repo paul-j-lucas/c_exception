@@ -35,11 +35,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * TODO
+ * Contains information about a thrown exception.
  */
 struct cx_exception {
-  void       *user_data;
-
   /// The file whence the exception was thrown.
   char const *file;
 
@@ -297,7 +295,7 @@ void cx_terminate( void );
 #define CX_THROW_1(XID)           cx_impl_throw( __FILE__, __LINE__, (XID) )
 
 /**
- * Internal state maintained by \ref cx_impl_try_block.
+ * Internal state of by \ref cx_impl_try_block.
  */
 enum cx_impl_state {
   CX_INIT,                              ///< Initial state.
@@ -311,7 +309,7 @@ typedef enum cx_impl_state cx_impl_state_t;
 typedef struct cx_impl_try_block cx_impl_try_block_t;
 
 /**
- * TODO
+ * Internal state of `try` block.
  */
 struct cx_impl_try_block {
   jmp_buf               env;            ///< Jump buffer.
@@ -348,17 +346,17 @@ _Noreturn
 void cx_impl_throw( char const *file, int line, int xid );
 
 /**
- * TODO
+ * Checks whether the `try` code should be executed.
  *
- * @param tb TODO
- * @return TODO
+ * @param tb A pointer to the current \ref cx_impl_try_block.
+ * @return Returns `true` only if the `try` code should be executed.
  */
 bool cx_impl_try_condition( cx_impl_try_block_t *tb );
 
 /**
- * TODO
+ * Gets an initialized \ref cx_impl_try_block.
  *
- * @return TODO
+ * @return Returns an initialized \ref cx_impl_try_block.
  */
 cx_impl_try_block_t cx_impl_try_init( void );
 

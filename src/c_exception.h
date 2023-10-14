@@ -163,9 +163,9 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  *  printf( "n = %s\n", n );
  *  ```
  *
- * @warning Within a `try` block, you must _never_ `break` or `continue` unless
- * within your own loop or `switch` due to the way in which <code>%try</code>
- * is implemented.  For example, do _not_ do something like:
+ * @warning Within a `try` block, you must _never_ `break` unless it's within
+ * your own loop or `switch` due to the way in which `try` is implemented.  For
+ * example, do _not_ do something like:
  *  ```c
  *  while ( true ) {
  *    try {
@@ -188,17 +188,11 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  *  }
  *  ```
  *
- * @warning Additionally, within a `try` block, you must _never_ `goto` outside
- * the `try` block nor `return` from the function unless you call
- * cx_cancel_try() first:
- * ```c
- *  try {
- *    if ( some_condition ) {
- *      cx_cancel_try();
- *      return;
- *    }
- *    // ...
- * ```
+ * @warning Within a `try` block, you must _never_ `goto` outside the `try`
+ * block nor `return` from the function. See \ref cx_cancel_try().
+ *
+ * @warning Within a `try` block, `continue` will cause the `try` block to exit
+ * immediately and jump to the `finally` block, if any.
  *
  * @sa cx_cancel_try()
  * @sa #cx_catch()
@@ -233,16 +227,22 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  * @endparblock
  *
  * @note Unlike the C++ equivalent, the `()` are required with _no_ space
- * between the <code>%catch</code> and the `(`.
+ * between the `catch` and the `(`.
  *
  * @note For a given `try` block, there may be zero or more `catch` blocks.
  * However, if there are zero, there _must_ be one `finally` block.  Multiple
  * `catch` blocks are tried in the order declared and at most one `catch` block
  * will be matched.
  *
- * @warning The same warnings about `try` blocks also apply to `catch` blocks
- * except variables declared outside the `try` block (but not modified within
- * it) and used in the `catch` block need not be declared `volatile`.
+ * @warning Similarly to a `try` block, within a `catch` block, you must
+ * _never_ `break` unless it's within your own loop or `switch` due to the way
+ * in which `try` is implemented.
+ *
+ * @warning Within a `catch` block, you must _never_ `goto` outside the
+ * `catch` block nor `return` from the function. See \ref cx_cancel_try().
+ *
+ * @warning Within a `catch` block, `continue` will cause the `catch` block to
+ * exit immediately and jump to the `finally` block, if any.
  *
  * @sa #cx_throw()
  * @sa #cx_try
@@ -262,9 +262,16 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  * However, if there are zero `catch` blocks, then there _must_ be one
  * `finally` block.
  *
- * @warning The same warnings about `try` blocks also apply to `finally` blocks
- * except variables declared outside the `try` block (but not modified within
- * it) and used in the `finally` block need not be declared `volatile`.
+ * @warning Similarly to a `try` block, within a `finally` block, you must
+ * _never_ `break` unless it's within your own loop or `switch` due to the way
+ * in which `try` is implemented.
+ *
+ * @warning Within a `finally` block, you must _never_ `goto` outside the
+ * `finally` block nor `return` from the function. See \ref cx_cancel_try().
+ *
+ * @warning Within a `finally` block, `continue` will cause the `finally` block
+ * to exit immediately.  If there is an uncaught exception, it will be
+ * rethrown.
  *
  * @sa #cx_try
  * @sa #cx_catch
@@ -308,8 +315,7 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
 
 /**
  * Cancels a current `try` block in the current scope allowing you to then
- * safely `goto` out of the `try` block or `return` from the function.
- *
+ * safely `goto` out of the `try` block or `return` from the function:
  *  ```c
  *  try {
  *    // ...
@@ -319,6 +325,8 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  *    }
  *  }
  *  ```
+ * However, if you do this, the `finally` block, if any, will _not_ be
+ * executed and any uncaught exception will _not_ be rethrown.
  *
  * @note If there is no current `try` block, does nothing.
  */

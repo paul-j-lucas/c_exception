@@ -1,0 +1,24 @@
+2023-10-14  Paul J. Lucas <paul@lucasmail.org>
+
+   * INSTALL: Initial commit.
+   * COPYING: Initial commit.
+   * c_exception_test.c: Added `continue` test.
+   * c_exception_test.c: Changed test_xid_matcher() to use masking.
+   * c_exception.c: Got rid of CX_IMPL_FINALLY checks.
+   * c_exception.c, c_exception.h: Renaming.
+   * c_exception_test.c: Only n_try is volatile.
+   * configure.ac: Added -Wno-dangling-else.
+   * c_exception.c, c_exception.h, c_exception_test.c: More docs; testing
+     custom xid matcher.
+   * c_exception_test.c: Added `volatile`.
+   * c_exception.h: Implementation of `finally` now works correctly with
+     setjmp().
+
+2023-10-13  Paul J. Lucas <paul@lucasmail.org>
+
+   * c_exception.c, c_exception.h: No longer storing return value of setjmp().
+   * c_exception.c, c_exception.h: s/j_buf/env/
+   * c_exception.c: Removed our own definition of unreachable().
+   * c_exception_test.c: Added individual TEST() macros.
+   * configure.ac: Removed -Wpedantic -- causes preprocessor warnings.
+   * Makefile.am: Removed "test".

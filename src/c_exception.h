@@ -102,6 +102,41 @@ typedef void (*cx_terminate_handler_t)( cx_exception_t const *cex );
  * `catch` clauses to determine whether the thrown exception matches a
  * particular exception.
  *
+ * @remarks
+ * @parblock
+ * Since C doesn't have inheritance, there's no way to create exception
+ * hierarchies.  As a substitute, you can create numeric groups and catch _any_
+ * exception in a group.
+ *
+ * For example, if you have:
+ *  ```c
+ *  #define EX_FILE_ANY         0x0100
+ *  #define EX_FILE_IO_ERROR    (EX_FILE_ANY | 0x01)
+ *  #define EX_FILE_NOT_FOUND   (EX_FILE_ANY | 0x02)
+ *  #define EX_FILE_PERMISSION  (EX_FILE_ANY | 0x03)
+ *  // ...
+ *
+ *  bool my_cx_xid_matcher( int thrown_xid, int catch_xid ) {
+ *    if ( (catch_xid & 0x00FF) == 0x00 )
+ *      thrown_xid &= 0xFF00;
+ *    return thrown_xid == catch_xid;
+ *  }
+ *  ```
+ * then you can do:
+ *  ```c
+ *  cx_set_xid_matcher( &my_cx_xid_matcher );
+ *  try {
+ *    // ...
+ *  }
+ *  catch( EX_FILE_NOT_FOUND ) {
+ *    // handle file-not-found specifically
+ *  }
+ *  catch( EX_FILE_ANY ) {
+ *    // handle any other file error
+ *  }
+ *  ```
+ * @endparblock
+ *
  * @param thrown_xid The thrown exception ID.
  * @param catch_xid The exception ID to match \a thrown_xid against.
  * @return Returns `true` only if \a thrown_xid matches \a catch_xid.
@@ -201,7 +236,9 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  * between the <code>%catch</code> and the `(`.
  *
  * @note For a given `try` block, there may be zero or more `catch` blocks.
- * However, if there are zero, there _must_ be one `finally` block.
+ * However, if there are zero, there _must_ be one `finally` block.  Multiple
+ * `catch` blocks are tried in the order declared and at most one `catch` block
+ * will be matched.
  *
  * @warning The same warnings about `try` blocks also apply to `catch` blocks
  * except variables declared outside the `try` block (but not modified within

@@ -25,12 +25,12 @@
 #include <setjmp.h>
 #include <stdbool.h>
 
-#ifdef CX_USE_CPP_KEYWORDS
+#ifdef CX_USE_TRADITIONAL_KEYWORDS
 # define try                      cx_try
 # define catch(...)               cx_catch( __VA_ARGS__ )
 # define finally                  cx_finally
 # define throw(...)               cx_throw( __VA_ARGS__ )
-#endif /* CX_USE_CPP_KEYWORDS */
+#endif /* CX_USE_TRADITIONAL_KEYWORDS */
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -104,7 +104,8 @@ typedef bool (*cx_xid_matcher_t)( int xid1, int xid2 );
 #define cx_try                                          \
   for ( cx_impl_try_block_t cx_tb = cx_impl_try_init(); \
         cx_impl_try_condition( &cx_tb ); )              \
-    if ( cx_tb.state == CX_TRY && setjmp( cx_tb.env ) == 0 )
+    if ( cx_tb.state != CX_FINALLY )                    \
+      if ( setjmp( cx_tb.env ) == 0 )
 
 /**
  * Begins a `catch` block possibly catching an exception and executing the code
@@ -156,7 +157,7 @@ typedef bool (*cx_xid_matcher_t)( int xid1, int xid2 );
  * @sa #cx_catch
  * @sa #cx_throw
  */
-#define cx_finally                else if ( cx_tb.state == CX_FINALLY )
+#define cx_finally                else ; else
 
 /**
  * Throws an exception.

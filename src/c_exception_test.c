@@ -133,7 +133,9 @@ static bool test_nested_throw_catch( void ) {
 }
 
 static bool test_xid_matcher( int thrown_xid, int catch_xid ) {
-  return (thrown_xid & 0x100) == catch_xid;
+  if ( (catch_xid & 0x00FF) == 0x00 )
+    thrown_xid &= 0xFF00;
+  return thrown_xid == catch_xid;
 }
 
 static bool test_custom_xid_matcher( void ) {

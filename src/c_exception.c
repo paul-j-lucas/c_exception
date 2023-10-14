@@ -53,6 +53,11 @@ static void cx_default_terminate_handler( cx_exception_t const* );
 static bool cx_default_xid_matcher( int, int );
 
 /**
+ * @ingroup c-exception-implementation-group
+ * @{
+ */
+
+/**
  * Current exception.
  */
 static CX_IMPL_THREAD_LOCAL cx_exception_t cx_exception;
@@ -107,12 +112,72 @@ static bool cx_default_xid_matcher( int thrown_xid, int catch_xid ) {
  * Actually "throws" the current exception.
  */
 _Noreturn
-static void cx_do_throw( void ) {
+static void cx_impl_do_throw( void ) {
   if ( cx_try_block_head == NULL )
     cx_terminate();
   cx_try_block_head->state = CX_IMPL_THROWN;
   cx_try_block_head->thrown_xid = cx_exception.thrown_xid;
   longjmp( cx_try_block_head->env, 1 );
+}
+
+/** @} */
+
+////////// extern implementation functions ////////////////////////////////////
+
+bool cx_impl_catch( int catch_xid, cx_impl_try_block_t *tb ) {
+  assert( tb != NULL );
+  assert( tb->state == CX_IMPL_THROWN );
+  assert( cx_xid_matcher != NULL );
+  if ( !(*cx_xid_matcher)( tb->thrown_xid, catch_xid ) )
+    return false;
+  tb->state = CX_IMPL_CAUGHT;
+  return true;
+}
+
+bool cx_impl_catch_all( cx_impl_try_block_t *tb ) {
+  assert( tb != NULL );
+  assert( tb->state == CX_IMPL_THROWN );
+  tb->state = CX_IMPL_CAUGHT;
+  return true;
+}
+
+void cx_impl_throw( char const *file, int line, int xid ) {
+  cx_exception = (cx_exception_t){
+    .file = file,
+    .line = line,
+    .thrown_xid = xid
+  };
+  cx_impl_do_throw();
+}
+
+bool cx_impl_try_condition( cx_impl_try_block_t *tb ) {
+  assert( tb != NULL );
+
+  switch ( tb->state ) {
+    case CX_IMPL_INIT:
+      tb->parent = cx_try_block_head;
+      cx_try_block_head = tb;
+      tb->state = CX_IMPL_TRY;
+      return true;
+    case CX_IMPL_CAUGHT:
+      tb->thrown_xid = 0;               // reset for CX_IMPL_FINALLY case
+      FALLTHROUGH;
+    case CX_IMPL_TRY:
+    case CX_IMPL_THROWN:
+      assert( cx_try_block_head != NULL );
+      cx_try_block_head = cx_try_block_head->parent;
+      tb->state = CX_IMPL_FINALLY;
+      return true;
+    case CX_IMPL_FINALLY:
+      if ( tb->thrown_xid != 0 )
+        cx_impl_do_throw();             // rethrow uncaught exception
+      return false;
+  } // switch
+}
+
+cx_impl_try_block_t cx_impl_try_init( void ) {
+  static cx_impl_try_block_t const tb;
+  return tb;
 }
 
 ////////// extern public functions ////////////////////////////////////////////
@@ -147,64 +212,6 @@ void cx_terminate( void ) {
   assert( cx_terminate_handler != NULL );
   (*cx_terminate_handler)( &cx_exception );
   unreachable();
-}
-
-////////// extern implementation functions ////////////////////////////////////
-
-bool cx_impl_catch( int catch_xid, cx_impl_try_block_t *tb ) {
-  assert( tb != NULL );
-  assert( tb->state == CX_IMPL_THROWN );
-  assert( cx_xid_matcher != NULL );
-  if ( !(*cx_xid_matcher)( tb->thrown_xid, catch_xid ) )
-    return false;
-  tb->state = CX_IMPL_CAUGHT;
-  return true;
-}
-
-bool cx_impl_catch_all( cx_impl_try_block_t *tb ) {
-  assert( tb != NULL );
-  assert( tb->state == CX_IMPL_THROWN );
-  tb->state = CX_IMPL_CAUGHT;
-  return true;
-}
-
-void cx_impl_throw( char const *file, int line, int xid ) {
-  cx_exception = (cx_exception_t){
-    .file = file,
-    .line = line,
-    .thrown_xid = xid
-  };
-  cx_do_throw();
-}
-
-bool cx_impl_try_condition( cx_impl_try_block_t *tb ) {
-  assert( tb != NULL );
-
-  switch ( tb->state ) {
-    case CX_IMPL_INIT:
-      tb->parent = cx_try_block_head;
-      cx_try_block_head = tb;
-      tb->state = CX_IMPL_TRY;
-      return true;
-    case CX_IMPL_CAUGHT:
-      tb->thrown_xid = 0;               // reset for CX_IMPL_FINALLY case
-      FALLTHROUGH;
-    case CX_IMPL_TRY:
-    case CX_IMPL_THROWN:
-      assert( cx_try_block_head != NULL );
-      cx_try_block_head = cx_try_block_head->parent;
-      tb->state = CX_IMPL_FINALLY;
-      return true;
-    case CX_IMPL_FINALLY:
-      if ( tb->thrown_xid != 0 )
-        cx_do_throw();                  // rethrow uncaught exception
-      return false;
-  } // switch
-}
-
-cx_impl_try_block_t cx_impl_try_init( void ) {
-  static cx_impl_try_block_t const tb;
-  return tb;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

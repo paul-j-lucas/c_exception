@@ -31,6 +31,20 @@
 #include <setjmp.h>
 #include <stdbool.h>
 
+#ifdef __cplusplus
+// While this C library would never be used in a pure C++ program, it may be
+// used in a program with both C and C++ code.
+extern "C" {
+#endif /* __cplusplus */
+
+////////// public /////////////////////////////////////////////////////////////
+
+/**
+ * @defgroup c-exception-public-api-group Public API
+ * Declares types, macros, and functions for public use.
+ * @{
+ */
+
 #if !defined(CX_USE_TRADITIONAL_KEYWORDS)
   /**
    * If defined to 1, allows use of traditional keywords in addition to the
@@ -54,19 +68,6 @@
 # define finally                  cx_finally
 # define throw(...)               cx_throw( __VA_ARGS__ )
 #endif /* CX_USE_TRADITIONAL_KEYWORDS */
-
-///////////////////////////////////////////////////////////////////////////////
-
-#ifdef __cplusplus
-// While this C library would never be used in a pure C++ program, it may be
-// used in a program with both C and C++ code.
-extern "C" {
-#endif /* __cplusplus */
-
-/**
- * @defgroup c-exception-public-api-group Public API.
- * Declares types, macros, and functions for public use.
- */
 
 /**
  * Contains information about a thrown exception.
@@ -340,11 +341,13 @@ void cx_terminate( void );
 ////////// implementation /////////////////////////////////////////////////////
 
 /**
- * @defgroup c-exception-implementation-group Implementation API.
+ * @defgroup c-exception-implementation-group Implementation API
  * Declares types, macros, and functions for the implementation.
  *
  * @note Everything in the implementation API starts with either `cx_impl_` or
  * `CX_IMPL_`.
+ *
+ * @{
  */
 
 #define CX_IMPL_ARGN(...)         CX_IMPL_COUNT(__VA_ARGS__, 2, 0, 1)
@@ -368,7 +371,7 @@ enum cx_impl_state {
   CX_IMPL_TRY,                          ///< No exception thrown.
   CX_IMPL_THROWN,                       ///< Exception thrown, but uncaught.
   CX_IMPL_CAUGHT,                       ///< Exception caught.
-  CX_IMPL_FINALLY                            ///< Running `finally` code, if any.
+  CX_IMPL_FINALLY                       ///< Running `finally` code, if any.
 };
 typedef enum cx_impl_state cx_impl_state_t;
 

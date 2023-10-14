@@ -78,6 +78,20 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  * Begins a `try` block to be followed by zero or more #cx_catch blocks and
  * zero or one #cx_finally block.
  *
+ * @warning Any variables declared outside the `try` block that are modified
+ * within the `try` block and used again _must_ be declared `volatile`:
+ *  ```c
+ *  int volatile n = 0;
+ *  try {
+ *    // ..
+ *    ++n;
+ *  }
+ *  catch ( EX_FILE_NOT_FOUND ) {
+ *    // ...
+ *  }
+ *  printf( "n = %s\n", n );
+ *  ```
+ *
  * @warning Within a `try` block, you must _never_ `break` or `continue` unless
  * within your own loop or `switch` due to the way in which <code>%try</code>
  * is implemented.  For example, do _not_ do something like:
@@ -150,9 +164,12 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  * @note Unlike the C++ equivalent, the `()` are required with _no_ space
  * between the <code>%catch</code> and the `(`.
  *
- * @note Catch blocks are optional.
+ * @note For a given `try` block, there may be zero or more `catch` blocks.
+ * However, if there are zero, there _must_ be one `finally` block.
  *
- * @warning The same warnings about `try` blocks also apply to `catch` blocks.
+ * @warning The same warnings about `try` blocks also apply to `catch` blocks
+ * except variables declared outside the `try` block (but not modified within
+ * it) and used in the `catch` block need not be declared `volatile`.
  *
  * @sa #cx_throw()
  * @sa #cx_try
@@ -168,9 +185,13 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  * @remarks Even though C++ doesn't have `finally`, it's provided since C
  * doesn't have destructors to implement RAII.
  *
- * @note Finally blocks are optional.
+ * @note For a given `try` block, there may be zero or one `finally` block.
+ * However, if there are zero `catch` blocks, then there _must_ be one
+ * `finally` block.
  *
- * @warning The same warnings about `try` also apply to finally blocks.
+ * @warning The same warnings about `try` blocks also apply to `finally` blocks
+ * except variables declared outside the `try` block (but not modified within
+ * it) and used in the `finally` block need not be declared `volatile`.
  *
  * @sa #cx_try
  * @sa #cx_catch

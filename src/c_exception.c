@@ -62,12 +62,18 @@ static cx_terminate_handler_t cx_terminate_handler =
  */
 static CX_THREAD_LOCAL cx_impl_try_block_t *cx_try_block_head;
 
+/**
+ * Current exception matcher function.
+ */
 static cx_xid_matcher_t cx_xid_matcher = &cx_default_xid_matcher;
 
 ////////// local functions ////////////////////////////////////////////////////
 
 /**
  * Default terminate handler.
+ *
+ * @param cex A pointer to a cx_exception object that has information about the
+ * exception that was thrown.
  */
 _Noreturn
 static void cx_default_terminate_handler( cx_exception_t const *cex ) {
@@ -75,27 +81,31 @@ static void cx_default_terminate_handler( cx_exception_t const *cex ) {
   fprintf( stderr,
     "%s:%d: unhandled exception %d (0x%X)\n",
     cex->file, cex->line,
-    cex->xid, (unsigned)cex->xid
+    cex->thrown_xid, (unsigned)cex->thrown_xid
   );
   abort();
 }
 
 /**
- * Default TODO
+ * Default exception matcher function.
+ *
+ * @param thrown_xid The thrown exception ID.
+ * @param catch_xid The exception ID to match \a thrown_xid against.
+ * @return Returns `true` only if \a thrown_xid equals \a catch_xid.
  */
-static bool cx_default_xid_matcher( int xid1, int xid2 ) {
-  return xid1 == xid2;
+static bool cx_default_xid_matcher( int thrown_xid, int catch_xid ) {
+  return thrown_xid == catch_xid;
 }
 
 /**
- * TODO
+ * Actually "throws" the current exception.
  */
 _Noreturn
 static void cx_do_throw( void ) {
   if ( cx_try_block_head == NULL )
     cx_terminate();
   cx_try_block_head->state = CX_THROWN;
-  cx_try_block_head->xid = cx_exception.xid;
+  cx_try_block_head->thrown_xid = cx_exception.thrown_xid;
   longjmp( cx_try_block_head->env, 1 );
 }
 
@@ -135,13 +145,13 @@ void cx_terminate( void ) {
 
 ////////// extern implementation functions ////////////////////////////////////
 
-bool cx_impl_catch( int xid, cx_impl_try_block_t *tb ) {
+bool cx_impl_catch( int catch_xid, cx_impl_try_block_t *tb ) {
   assert( tb != NULL );
   if ( tb->state == CX_FINALLY )
     return false;
   assert( tb->state == CX_THROWN );
   assert( cx_xid_matcher != NULL );
-  if ( !(*cx_xid_matcher)( xid, tb->xid ) )
+  if ( !(*cx_xid_matcher)( tb->thrown_xid, catch_xid ) )
     return false;
   tb->state = CX_CAUGHT;
   return true;
@@ -157,7 +167,11 @@ bool cx_impl_catch_all( cx_impl_try_block_t *tb ) {
 }
 
 void cx_impl_throw( char const *file, int line, int xid ) {
-  cx_exception = (cx_exception_t){ .file = file, .line = line, .xid = xid };
+  cx_exception = (cx_exception_t){
+    .file = file,
+    .line = line,
+    .thrown_xid = xid
+  };
   cx_do_throw();
 }
 
@@ -171,7 +185,7 @@ bool cx_impl_try_condition( cx_impl_try_block_t *tb ) {
       tb->state = CX_TRY;
       return true;
     case CX_CAUGHT:
-      tb->xid = 0;                      // reset for CX_FINALLY case
+      tb->thrown_xid = 0;               // reset for CX_FINALLY case
       FALLTHROUGH;
     case CX_TRY:
     case CX_THROWN:
@@ -180,7 +194,7 @@ bool cx_impl_try_condition( cx_impl_try_block_t *tb ) {
       tb->state = CX_FINALLY;
       return true;
     case CX_FINALLY:
-      if ( tb->xid != 0 )
+      if ( tb->thrown_xid != 0 )
         cx_do_throw();                  // rethrow uncaught exception
       return false;
   } // switch

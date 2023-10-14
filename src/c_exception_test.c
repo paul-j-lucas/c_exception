@@ -38,8 +38,9 @@ static unsigned   test_failures;
 
 ////////// local functions ////////////////////////////////////////////////////
 
-#define TEST_XID_01  0x0101
-#define TEST_XID_02  0x0102
+#define TEST_XID_ANY  0x0100
+#define TEST_XID_01   0x0101
+#define TEST_XID_02   0x0102
 
 static bool test_no_throw( void ) {
   TEST_FN_BEGIN();
@@ -128,6 +129,27 @@ static bool test_nested_throw_catch( void ) {
   TEST_FN_END();
 }
 
+static bool test_xid_matcher( int thrown_xid, int catch_xid ) {
+  return (thrown_xid & 0x100) == catch_xid;
+}
+
+static bool test_custom_xid_matcher( void ) {
+  TEST_FN_BEGIN();
+  cx_xid_matcher_t prev = cx_set_xid_matcher( &test_xid_matcher );
+  unsigned volatile n_try = 0, n_catch = 0;
+  cx_try {
+    ++n_try;
+    cx_throw( TEST_XID_01 );
+  }
+  cx_catch( TEST_XID_ANY ) {
+    ++n_catch;
+  }
+  cx_set_xid_matcher( prev );
+  TEST( n_try == 1 );
+  TEST( n_catch == 1 );
+  TEST_FN_END();
+}
+
 int main( int argc, char const *argv[] ) {
   (void)argc;
   me = argv[0];
@@ -136,6 +158,7 @@ int main( int argc, char const *argv[] ) {
   TEST( test_throw_catch_1() );
   TEST( test_throw_catch_2() );
   TEST( test_nested_throw_catch() );
+  TEST( test_custom_xid_matcher() );
 
   printf( "%u failures\n", test_failures );
   exit( test_failures > 0 ? EX_SOFTWARE : EX_OK );

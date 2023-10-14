@@ -39,9 +39,14 @@
  */
 struct cx_exception {
   void       *user_data;
-  char const *file;     ///< The file whence the exception was thrown.
-  int         line;     ///< The line number within \ref file whence the exception was thrown.
-  int         xid;      ///< The exception ID that was thrown.
+
+  /// The file whence the exception was thrown.
+  char const *file;
+
+  /// The line number within \ref file whence the exception was thrown.
+  int         line;
+
+  int         thrown_xid;               ///< The exception ID that was thrown.
 };
 typedef struct cx_exception cx_exception_t;
 
@@ -49,37 +54,41 @@ typedef struct cx_exception cx_exception_t;
  * The signature for a "terminate handler" function that is called by
  * cx_terminate().
  *
- * @note Terminate handler functions _must not_ return.
+ * @warning Terminate handler functions _must not_ return.
+ *
+ * @param cex A pointer to a cx_exception object that has information about the
+ * exception that was thrown.
+ *
+ * @sa cx_set_terminate()
  */
 typedef void (*cx_terminate_handler_t)( cx_exception_t const *cex );
 
 /**
- * TODO
+ * The signature for a "exception ID matcher" function that is called by
+ * `catch` clauses to determine whether the thrown exception matches a
+ * particular exception.
  *
- * @param xid1 The first exception ID.
- * @param xid2 The second exception ID.
- * @return Returns `true` only if \a xid1 matches \a xid2.
+ * @param thrown_xid The thrown exception ID.
+ * @param catch_xid The exception ID to match \a thrown_xid against.
+ * @return Returns `true` only if \a thrown_xid matches \a catch_xid.
+ *
+ * @sa cx_set_xid_matcher()
  */
-typedef bool (*cx_xid_matcher_t)( int xid1, int xid2 );
+typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
 
 /**
- * Begins a `try` block to be followed by one or more #cx_catch blocks.
+ * Begins a `try` block to be followed by zero or more #cx_catch blocks and
+ * zero or one #cx_finally block.
  *
- * @warning Within a `try` block, you must _never_ use `break` or `continue`
- * (unless within your own `switch` or loop, nor `goto` outside the `try`
- * block, nor `return` unless you call cx_cancel_try() first.
- *
- * @warning However, even if you call cx_cancel_try(), either a `break` or
- * `continue` will _not_ break out of a loop surrounding the `try` block due to
- * the way in which <code>%try</code> is implemented:
+ * @warning Within a `try` block, you must _never_ `break` or `continue` unless
+ * within your own loop or `switch` due to the way in which <code>%try</code>
+ * is implemented.  For example, do _not_ do something like:
  *  ```c
  *  while ( true ) {
  *    try {
  *      // ...
- *      if ( do_break ) {
- *        cx_cancel_try();
+ *      if ( some_condition )
  *        break;                        // does NOT break out of while loop
- *      }
  *    }
  *    // ...
  *  }
@@ -89,12 +98,24 @@ typedef bool (*cx_xid_matcher_t)( int xid1, int xid2 );
  *  try {
  *    while ( true ) {
  *      // ...
- *      if ( do_break )
+ *      if ( some_condition )
  *        break;                        // breaks out of while loop
  *    }
  *    // ...
  *  }
  *  ```
+ *
+ * @warning Additionally, within a `try` block, you must _never_ `goto` outside
+ * the `try` block nor `return` from the function unless you call
+ * cx_cancel_try() first:
+ * ```c
+ *  try {
+ *    if ( some_condition ) {
+ *      cx_cancel_try();
+ *      return;
+ *    }
+ *    // ...
+ * ```
  *
  * @sa cx_cancel_try()
  * @sa #cx_catch()
@@ -133,7 +154,7 @@ typedef bool (*cx_xid_matcher_t)( int xid1, int xid2 );
  *
  * @note Catch blocks are optional.
  *
- * @warning The same warnings about `try` also apply to catch blocks.
+ * @warning The same warnings about `try` blocks also apply to `catch` blocks.
  *
  * @sa #cx_throw()
  * @sa #cx_try
@@ -222,9 +243,9 @@ void cx_cancel_try( void );
 cx_terminate_handler_t cx_get_terminate( void );
 
 /**
- * TODO
+ * Gets the current \ref cx_xid_matcher_t, if any.
  *
- * @return TODO
+ * @return Returns said function or NULL if none.
  *
  * @sa cx_set_xid_matcher()
  */
@@ -242,10 +263,10 @@ cx_xid_matcher_t cx_get_xid_matcher( void );
 cx_terminate_handler_t cx_set_terminate( cx_terminate_handler_t fn );
 
 /**
- * TODO
+ * Sets teh current \ref cx_xid_matcher_t.
  *
- * @param fn TODO
- * @return TODO
+ * @param fn The new \ref cx_xid_matcher_t or NULL to use the default.
+ * @return Returns the previous \ref cx_xid_matcher_t, if any.
  *
  * @sa cx_get_xid_matcher()
  */
@@ -272,7 +293,7 @@ void cx_terminate( void );
 #define CX_CATCH_0()              else if ( cx_impl_catch_all( &cx_tb ) )
 #define CX_CATCH_1(XID)           else if ( cx_impl_catch( (XID), &cx_tb ) )
 
-#define CX_THROW_0()              CX_THROW_1( cx_tb.xid )
+#define CX_THROW_0()              CX_THROW_1( cx_tb.thrown_xid )
 #define CX_THROW_1(XID)           cx_impl_throw( __FILE__, __LINE__, (XID) )
 
 /**
@@ -296,7 +317,7 @@ struct cx_impl_try_block {
   jmp_buf               env;            ///< Jump buffer.
   cx_impl_try_block_t  *parent;         ///< Enclosing parent `try`, if any.
   cx_impl_state_t       state;          ///< Current state.
-  int                   xid;            ///< Thrown exception ID, if any.
+  int                   thrown_xid;     ///< Thrown exception ID, if any.
 };
 
 /**
@@ -317,11 +338,11 @@ bool cx_impl_catch( int xid, cx_impl_try_block_t *tb );
 bool cx_impl_catch_all( cx_impl_try_block_t *tb );
 
 /**
- * TODO
+ * Throws \a xid.
  *
  * @param file The file whence the exception wat thrown.
  * @param line The line number within \a file whence the exception was thrown.
- * @param xid The exception ID.
+ * @param xid The exception ID to throw.
  */
 _Noreturn
 void cx_impl_throw( char const *file, int line, int xid );

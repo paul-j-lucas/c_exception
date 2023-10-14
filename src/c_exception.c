@@ -153,8 +153,6 @@ void cx_terminate( void ) {
 
 bool cx_impl_catch( int catch_xid, cx_impl_try_block_t *tb ) {
   assert( tb != NULL );
-  if ( tb->state == CX_IMPL_FINALLY )
-    return false;
   assert( tb->state == CX_IMPL_THROWN );
   assert( cx_xid_matcher != NULL );
   if ( !(*cx_xid_matcher)( tb->thrown_xid, catch_xid ) )
@@ -165,8 +163,6 @@ bool cx_impl_catch( int catch_xid, cx_impl_try_block_t *tb ) {
 
 bool cx_impl_catch_all( cx_impl_try_block_t *tb ) {
   assert( tb != NULL );
-  if ( tb->state == CX_IMPL_FINALLY )
-    return false;
   assert( tb->state == CX_IMPL_THROWN );
   tb->state = CX_IMPL_CAUGHT;
   return true;

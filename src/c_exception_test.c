@@ -61,7 +61,7 @@ static bool test_no_throw( void ) {
 
 static bool test_throw_catch_1( void ) {
   TEST_FN_BEGIN();
-  unsigned n_try = 0, n_catch_1 = 0, n_catch_2 = 0, n_finally = 0;
+  unsigned volatile n_try = 0, n_catch_1 = 0, n_catch_2 = 0, n_finally = 0;
   cx_try {
     ++n_try;
     cx_throw( TEST_XID_01 );
@@ -84,7 +84,7 @@ static bool test_throw_catch_1( void ) {
 
 static bool test_throw_catch_2( void ) {
   TEST_FN_BEGIN();
-  unsigned n_try = 0, n_catch_1 = 0, n_catch_2 = 0, n_finally = 0;
+  unsigned volatile n_try = 0, n_catch_1 = 0, n_catch_2 = 0, n_finally = 0;
   cx_try {
     ++n_try;
     cx_throw( TEST_XID_02 );
@@ -111,7 +111,7 @@ static void test_nested_throw( int xid ) {
 
 static bool test_nested_throw_catch( void ) {
   TEST_FN_BEGIN();
-  unsigned n_try = 0, n_catch = 0, n_finally = 0;
+  unsigned volatile n_try = 0, n_catch = 0, n_finally = 0;
   cx_try {
     ++n_try;
     test_nested_throw( TEST_XID_01 );

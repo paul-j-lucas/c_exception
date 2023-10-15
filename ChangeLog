@@ -1,5 +1,9 @@
 2023-10-15  Paul J. Lucas <paul@lucasmail.org>
 
+   * c_exception.c, c_exception_test.c: Now resetting cx_exception in
+     CX_IMPL_FINALLY case; now checking cx_exception.file in
+     cx_current_exception().
+   * c_exception_test.c: Removed pointless test.
    * c_exception_test.c: Added test_throw_in_catch().
    * configure.ac: Removed -Wshadow.
    * c_exception.c, c_exception.h: Added cx_current_exception().

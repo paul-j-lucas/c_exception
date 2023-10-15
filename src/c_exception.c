@@ -187,6 +187,10 @@ void cx_cancel_try( void ) {
     cx_try_block_head = cx_try_block_head->parent;
 }
 
+cx_exception_t const* cx_current_exception( void ) {
+  return cx_try_block_head == NULL ? NULL : &cx_exception;
+}
+
 cx_terminate_handler_t cx_get_terminate( void ) {
   return cx_terminate_handler == &cx_default_terminate_handler ?
     NULL : cx_terminate_handler;

@@ -333,6 +333,14 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
 void cx_cancel_try( void );
 
 /**
+ * Gets the current exception, if any.
+ *
+ * @return If an exception is in progress, returns a pointer to it; otherwise
+ * returns NULL.
+ */
+cx_exception_t const* cx_current_exception( void );
+
+/**
  * Gets the current \ref cx_terminate_handler_t, if any.
  *
  * @return Returns said handler or NULL if none.

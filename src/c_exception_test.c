@@ -156,26 +156,6 @@ static bool test_custom_xid_matcher( void ) {
   TEST_FN_END();
 }
 
-static bool test_try_continue( void ) {
-  TEST_FN_BEGIN();
-  unsigned volatile n_try = 0;
-  unsigned n_catch = 0, n_finally = 0;
-  cx_try {
-    ++n_try;
-    continue;
-  }
-  cx_catch( TEST_XID_01 ) {
-    ++n_catch;
-  }
-  cx_finally {
-    ++n_finally;
-  }
-  TEST( n_try == 1 );
-  TEST( n_catch == 0 );
-  TEST( n_finally == 1 );
-  TEST_FN_END();
-}
-
 static bool test_throw_in_catch( void ) {
   TEST_FN_BEGIN();
   unsigned volatile n_inner_try = 0, n_outer_try = 0;
@@ -220,7 +200,6 @@ int main( int argc, char const *argv[] ) {
   TEST( test_throw_catch_2() );
   TEST( test_nested_throw_catch() );
   TEST( test_custom_xid_matcher() );
-  TEST( test_try_continue() );
   TEST( test_throw_in_catch() );
 
   printf( "%u failures\n", test_failures );

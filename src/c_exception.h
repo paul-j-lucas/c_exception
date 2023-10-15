@@ -99,7 +99,7 @@ typedef void (*cx_terminate_handler_t)( cx_exception_t const *cex );
 
 /**
  * The signature for a "exception ID matcher" function that is called by
- * `catch` clauses to determine whether the thrown exception matches a
+ * #cx_catch clauses to determine whether the thrown exception matches a
  * particular exception.
  *
  * @remarks
@@ -146,11 +146,12 @@ typedef void (*cx_terminate_handler_t)( cx_exception_t const *cex );
 typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
 
 /**
- * Begins a `try` block to be followed by zero or more #cx_catch blocks and
+ * Begins a "try" block to be followed by zero or more #cx_catch blocks and
  * zero or one #cx_finally block.
  *
- * @warning Any variables declared outside the `try` block that are modified
- * within the `try` block and used again _must_ be declared `volatile`:
+ * @warning Any variables declared outside the "try" block that are modified
+ * inside the block and used again outside the block _must_ be declared
+ * `volatile`:
  *  ```c
  *  int volatile n = 0;
  *  try {
@@ -163,9 +164,9 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  *  printf( "n = %s\n", n );
  *  ```
  *
- * @warning Within a `try` block, you must _never_ `break` unless it's within
- * your own loop or `switch` due to the way in which `try` is implemented.  For
- * example, do _not_ do something like:
+ * @warning Within a "try" block, you must _never_ `break` unless it's within
+ * your own loop or `switch` due to the way in which <code>%cx_try</code> is
+ * implemented.  For example, do _not_ do something like:
  *  ```c
  *  while ( true ) {
  *    try {
@@ -176,7 +177,7 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  *    // ...
  *  }
  *  ```
- * If possible, put the `while` inside the `try` instead:
+ * If possible, put the `while` inside the "try" instead:
  *  ```c
  *  try {
  *    while ( true ) {
@@ -188,11 +189,11 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  *  }
  *  ```
  *
- * @warning Within a `try` block, you must _never_ `goto` outside the `try`
- * block nor `return` from the function. See \ref cx_cancel_try().
+ * @warning Within a "try" block, you must _never_ `goto` outside the block nor
+ * `return` from the function. See \ref cx_cancel_try().
  *
- * @warning Within a `try` block, `continue` will cause the `try` block to exit
- * immediately and jump to the `finally` block, if any.
+ * @warning Within a "try" block, `continue` will cause the block to exit
+ * immediately and jump to the #cx_finally block, if any.
  *
  * @sa cx_cancel_try()
  * @sa #cx_catch()
@@ -206,7 +207,7 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
       if ( setjmp( cx_tb.env ) == 0 )
 
 /**
- * Begins a `catch` block possibly catching an exception and executing the code
+ * Begins a "catch" block possibly catching an exception and executing the code
  * in the block.
  *
  * @remarks
@@ -214,65 +215,68 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  * This can be used in one of two ways:
  *
  *  1. With an exception ID:
- *      ```c
+ *      @code
  *      cx_catch( EX_FILE_NOT_FOUND ) {
- *      ```
+ *      @endcode
  *     that catches the given exception ID.
  *
  *  2. With no exception ID:
- *      ```c
+ *      @code
  *      cx_catch() {
- *      ```
+ *      @endcode
  *     that catches any exception like the C++ `...` does.
  * @endparblock
  *
- * @note Unlike the C++ equivalent, the `()` are required with _no_ space
- * between the `catch` and the `(`.
+ * @note Unlike the C++ equivalent, the `()` are _required_ with _no_ space
+ * between the <code>%cx_catch</code> and the `(`.
  *
- * @note For a given `try` block, there may be zero or more `catch` blocks.
- * However, if there are zero, there _must_ be one `finally` block.  Multiple
- * `catch` blocks are tried in the order declared and at most one `catch` block
+ * @note For a given #cx_try block, there may be zero or more "catch" blocks.
+ * However, if there are zero, there _must_ be one #cx_finally block.  Multiple
+ * "catch" blocks are tried in the order declared and at most one "catch" block
  * will be matched.
  *
- * @warning Similarly to a `try` block, within a `catch` block, you must
+ * @warning Similarly to a #cx_try block, within a "catch" block, you must
  * _never_ `break` unless it's within your own loop or `switch` due to the way
- * in which `try` is implemented.
+ * in which <code>%cx_catch</code> is implemented.
  *
- * @warning Within a `catch` block, you must _never_ `goto` outside the
- * `catch` block nor `return` from the function. See \ref cx_cancel_try().
+ * @warning Within a "catch" block, you must _never_ `goto` outside the block
+ * nor `return` from the function. See \ref cx_cancel_try().
  *
- * @warning Within a `catch` block, `continue` will cause the `catch` block to
- * exit immediately and jump to the `finally` block, if any.
+ * @warning Within a "catch" block, `continue` will cause the block to exit
+ * immediately and jump to the #cx_finally block, if any.
  *
+ * @sa cx_cancel_try()
+ * @sa #cx_finally
+ * @sa #cx_set_xid_matcher()
  * @sa #cx_throw()
  * @sa #cx_try
- * @sa #cx_finally
  */
 #define cx_catch(...) \
   CX_IMPL_NAME2(CX_IMPL_CATCH_, CX_IMPL_ARGN(CX_IMPL_COMMA __VA_ARGS__ ()))(__VA_ARGS__)
 
 /**
- * Begins a `finally` block always executing the code in the block after the
- * code in the try block and any catch block.
+ * Begins a "finally" block always executing the code in the block after the
+ * code in the #cx_try block and any #cx_catch block.
  *
  * @remarks Even though C++ doesn't have `finally`, it's provided since C
- * doesn't have destructors to implement RAII.
+ * doesn't have destructors to implement
+ * [RAII](https://en.cppreference.com/w/cpp/language/raii).
  *
- * @note For a given `try` block, there may be zero or one `finally` block.
- * However, if there are zero `catch` blocks, then there _must_ be one
- * `finally` block.
+ * @note For a given #cx_try block, there may be zero or one "finally" block.
+ * However, if there are zero #cx_catch blocks, then there _must_ be one
+ * "finally" block.
  *
- * @warning Similarly to a `try` block, within a `finally` block, you must
+ * @warning Similarly to a #cx_try block, within a "finally" block, you must
  * _never_ `break` unless it's within your own loop or `switch` due to the way
- * in which `try` is implemented.
+ * in which <code>%cx_finally</code> is implemented.
  *
- * @warning Within a `finally` block, you must _never_ `goto` outside the
- * `finally` block nor `return` from the function. See \ref cx_cancel_try().
+ * @warning Within a "finally" block, you must _never_ `goto` outside the block
+ * nor `return` from the function. See \ref cx_cancel_try().
  *
- * @warning Within a `finally` block, `continue` will cause the `finally` block
- * to exit immediately.  If there is an uncaught exception, it will be
- * rethrown.
+ * @warning Within a "finally" block, `continue` will cause the block to exit
+ * immediately.  If there is an uncaught exception, it will be rethrown.
  *
+ * @sa cx_cancel_try()
  * @sa #cx_try
  * @sa #cx_catch
  * @sa #cx_throw
@@ -287,25 +291,26 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  * This can be called in one of two ways:
  *
  *  1. With an exception ID:
- *      ```c
+ *      @code
  *      cx_throw( EX_FILE_NOT_FOUND );
- *      ```
+ *      @endcode
  *     that throws a new exception.
  *
  *  2. Without an exception ID:
- *      ```c
+ *      @code
  *      cx_throw();
- *      ```
+ *      @endcode
  *     that rethrows the most recent exception.  If no exception has been
  *     caught, calls cx_terminate().
  * @endparblock
  *
- * @note Unlike C++, the `()` are required with _no_ space between the
+ * @note Unlike C++, the `()` are _required_ with _no_ space between the
  * <code>%cx_throw</code> and the `(`.
  *
  * @warning An exception that is thrown but not caught will result in
  * cx_terminate() being called.
  *
+ * @sa #cx_set_terminate()
  * @sa #cx_try
  * @sa #cx_catch()
  * @sa #cx_finally
@@ -314,8 +319,8 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
   CX_IMPL_NAME2(CX_IMPL_THROW_, CX_IMPL_ARGN(CX_IMPL_COMMA __VA_ARGS__ ()))(__VA_ARGS__)
 
 /**
- * Cancels a current `try` block in the current scope allowing you to then
- * safely `goto` out of the `try` block or `return` from the function:
+ * Cancels a current #cx_try block in the current scope allowing you to then
+ * safely `goto` out of the block or `return` from the function:
  *  ```c
  *  try {
  *    // ...
@@ -325,10 +330,10 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  *    }
  *  }
  *  ```
- * However, if you do this, the `finally` block, if any, will _not_ be
+ * However, if you do this, the #cx_finally block, if any, will _not_ be
  * executed and any uncaught exception will _not_ be rethrown.
  *
- * @note If there is no current `try` block, does nothing.
+ * @note If there is no current #cx_try block, does nothing.
  */
 void cx_cancel_try( void );
 
@@ -424,18 +429,18 @@ enum cx_impl_state {
   CX_IMPL_TRY,                          ///< No exception thrown.
   CX_IMPL_THROWN,                       ///< Exception thrown, but uncaught.
   CX_IMPL_CAUGHT,                       ///< Exception caught.
-  CX_IMPL_FINALLY                       ///< Running `finally` code, if any.
+  CX_IMPL_FINALLY                       ///< Running #cx_finally code, if any.
 };
 typedef enum cx_impl_state cx_impl_state_t;
 
 typedef struct cx_impl_try_block cx_impl_try_block_t;
 
 /**
- * Internal state of `try` block.
+ * Internal state of #cx_try block.
  */
 struct cx_impl_try_block {
   jmp_buf               env;            ///< Jump buffer.
-  cx_impl_try_block_t  *parent;         ///< Enclosing parent `try`, if any.
+  cx_impl_try_block_t  *parent;         ///< Enclosing parent #cx_try, if any.
   cx_impl_state_t       state;          ///< Current state.
   int                   thrown_xid;     ///< Thrown exception ID, if any.
 };
@@ -453,7 +458,7 @@ bool cx_impl_catch( int xid, cx_impl_try_block_t *tb );
  * Catches any exception.
  *
  * @param tb A pointer to the current \ref cx_impl_try_block.
- * @return Always returns `true` except when \a tb->state is #CX_IMPL_FINALLY.
+ * @return Always returns `true`.
  */
 bool cx_impl_catch_all( cx_impl_try_block_t *tb );
 
@@ -468,10 +473,10 @@ _Noreturn
 void cx_impl_throw( char const *file, int line, int xid );
 
 /**
- * Checks whether the `try` code should be executed.
+ * Checks whether the #cx_try code should be executed.
  *
  * @param tb A pointer to the current \ref cx_impl_try_block.
- * @return Returns `true` only if the `try` code should be executed.
+ * @return Returns `true` only if the #cx_try code should be executed.
  */
 bool cx_impl_try_condition( cx_impl_try_block_t *tb );
 

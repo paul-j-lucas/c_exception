@@ -330,8 +330,9 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  *    }
  *  }
  *  ```
- * However, if you do this, the #cx_finally block, if any, will _not_ be
- * executed and any uncaught exception will _not_ be rethrown.
+ *
+ * @warning However, if you do this, the #cx_finally block, if any, will _not_
+ * be executed and any uncaught exception will _not_ be rethrown.
  *
  * @note If there is no current #cx_try block, does nothing.
  */

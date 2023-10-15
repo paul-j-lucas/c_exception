@@ -474,10 +474,11 @@ _Noreturn
 void cx_impl_throw( char const *file, int line, int xid );
 
 /**
- * Checks whether the #cx_try code should be executed.
+ * Checks whether the #cx_try, #cx_catch, or #cx_finally code should be
+ * executed.
  *
  * @param tb A pointer to the current \ref cx_impl_try_block.
- * @return Returns `true` only if the #cx_try code should be executed.
+ * @return Returns `true` only if the code should be executed.
  */
 bool cx_impl_try_condition( cx_impl_try_block_t *tb );
 

@@ -69,7 +69,7 @@ static cx_terminate_handler_t cx_terminate_handler =
   &cx_default_terminate_handler;
 
 /**
- * Linked list of open `try` blocks.
+ * Linked list of open "try" blocks.
  */
 static CX_IMPL_THREAD_LOCAL cx_impl_try_block_t *cx_try_block_head;
 

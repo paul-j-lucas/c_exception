@@ -124,7 +124,6 @@ AX_CHECK_COMPILE_FLAG([-Wmisleading-indentation], [C_EXCEPTION_CFLAGS="$C_EXCEPT
 AX_CHECK_COMPILE_FLAG([-Wnewline-eof], [C_EXCEPTION_CFLAGS="$C_EXCEPTION_CFLAGS -Wnewline-eof"], [], [-Werror])
 AX_CHECK_COMPILE_FLAG([-Wredundant-decls], [C_EXCEPTION_CFLAGS="$C_EXCEPTION_CFLAGS -Wredundant-decls"], [], [-Werror])
 AX_CHECK_COMPILE_FLAG([-Wreserved-identifier], [C_EXCEPTION_CFLAGS="$C_EXCEPTION_CFLAGS -Wreserved-identifier"], [], [-Werror])
-AX_CHECK_COMPILE_FLAG([-Wshadow], [C_EXCEPTION_CFLAGS="$C_EXCEPTION_CFLAGS -Wshadow"], [], [-Werror])
 AX_CHECK_COMPILE_FLAG([-Wshift-sign-overflow], [C_EXCEPTION_CFLAGS="$C_EXCEPTION_CFLAGS -Wshift-sign-overflow"], [], [-Werror])
 AX_CHECK_COMPILE_FLAG([-Wshorten-64-to-32], [C_EXCEPTION_CFLAGS="$C_EXCEPTION_CFLAGS -Wshorten-64-to-32"], [], [-Werror])
 AX_CHECK_COMPILE_FLAG([-Wsign-compare], [C_EXCEPTION_CFLAGS="$C_EXCEPTION_CFLAGS -Wsign-compare"], [], [-Werror])

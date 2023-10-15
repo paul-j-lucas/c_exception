@@ -53,10 +53,12 @@ static bool test_no_throw( void ) {
   }
   cx_finally {
     ++n_finally;
+    TEST( cx_current_exception() == NULL );
   }
   TEST( n_try == 1 );
   TEST( n_catch == 0 );
   TEST( n_finally == 1 );
+  TEST( cx_current_exception() == NULL );
   TEST_FN_END();
 }
 
@@ -70,17 +72,20 @@ static bool test_throw_catch_1( void ) {
   }
   cx_catch( TEST_XID_01 ) {
     ++n_catch_1;
+    TEST( cx_current_exception() != NULL );
   }
   cx_catch( TEST_XID_02 ) {
     ++n_catch_2;
   }
   cx_finally {
     ++n_finally;
+    TEST( cx_current_exception() != NULL );
   }
   TEST( n_try == 1 );
   TEST( n_catch_1 == 1 );
   TEST( n_catch_2 == 0 );
   TEST( n_finally == 1 );
+  TEST( cx_current_exception() == NULL );
   TEST_FN_END();
 }
 
@@ -97,14 +102,17 @@ static bool test_throw_catch_2( void ) {
   }
   cx_catch( TEST_XID_02 ) {
     ++n_catch_2;
+    TEST( cx_current_exception() != NULL );
   }
   cx_finally {
     ++n_finally;
+    TEST( cx_current_exception() != NULL );
   }
   TEST( n_try == 1 );
   TEST( n_catch_1 == 0 );
   TEST( n_catch_2 == 1 );
   TEST( n_finally == 1 );
+  TEST( cx_current_exception() == NULL );
   TEST_FN_END();
 }
 
@@ -122,13 +130,16 @@ static bool test_nested_throw_catch( void ) {
   }
   cx_catch( TEST_XID_01 ) {
     ++n_catch;
+    TEST( cx_current_exception() != NULL );
   }
   cx_finally {
     ++n_finally;
+    TEST( cx_current_exception() != NULL );
   }
   TEST( n_try == 1 );
   TEST( n_catch == 1 );
   TEST( n_finally == 1 );
+  TEST( cx_current_exception() == NULL );
   TEST_FN_END();
 }
 
@@ -153,6 +164,7 @@ static bool test_custom_xid_matcher( void ) {
   cx_set_xid_matcher( prev );
   TEST( n_try == 1 );
   TEST( n_catch == 1 );
+  TEST( cx_current_exception() == NULL );
   TEST_FN_END();
 }
 
@@ -188,6 +200,7 @@ static bool test_throw_in_catch( void ) {
   TEST( n_outer_try == 1 );
   TEST( n_outer_catch == 1 );
   TEST( n_outer_finally == 1 );
+  TEST( cx_current_exception() == NULL );
   TEST_FN_END();
 }
 

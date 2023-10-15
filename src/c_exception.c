@@ -171,6 +171,7 @@ bool cx_impl_try_condition( cx_impl_try_block_t *tb ) {
       cx_try_block_head = cx_try_block_head->parent;
       if ( tb->thrown_xid != 0 )
         cx_impl_do_throw();             // rethrow uncaught exception
+      cx_exception = (cx_exception_t){ 0 };
       return false;
   } // switch
 }
@@ -188,7 +189,7 @@ void cx_cancel_try( void ) {
 }
 
 cx_exception_t const* cx_current_exception( void ) {
-  return cx_try_block_head == NULL ? NULL : &cx_exception;
+  return cx_exception.file == NULL ? NULL : &cx_exception;
 }
 
 cx_terminate_handler_t cx_get_terminate( void ) {

@@ -164,11 +164,11 @@ bool cx_impl_try_condition( cx_impl_try_block_t *tb ) {
       FALLTHROUGH;
     case CX_IMPL_TRY:
     case CX_IMPL_THROWN:
-      assert( cx_try_block_head != NULL );
-      cx_try_block_head = cx_try_block_head->parent;
       tb->state = CX_IMPL_FINALLY;
       return true;
     case CX_IMPL_FINALLY:
+      assert( cx_try_block_head != NULL );
+      cx_try_block_head = cx_try_block_head->parent;
       if ( tb->thrown_xid != 0 )
         cx_impl_do_throw();             // rethrow uncaught exception
       return false;

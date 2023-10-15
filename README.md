@@ -39,6 +39,17 @@ then do:
 
     make doc                            # or: make docs
 
+## Building with the Library
+
+When compiling your own code
+that uses the library,
+you should compile with the following options:
+
+    -Wno-dangling-else -Wno-shadow
+
+(or eqivalent for your compiler)
+to suppress warnings in the library code.
+
 **Paul J. Lucas**  
 San Francisco Bay Area, California, USA  
 13 October 2023

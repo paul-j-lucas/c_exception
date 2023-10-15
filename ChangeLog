@@ -1,5 +1,13 @@
+2023-10-15  Paul J. Lucas <paul@lucasmail.org>
+
+   * c_exception_test.c: Added test_throw_in_catch().
+   * configure.ac: Removed -Wshadow.
+   * c_exception.c, c_exception.h: Added cx_current_exception().
+   * c_exception.c: Moved popping of cx_try_block_head to CX_IMPL_FINALLY case.
+
 2023-10-14  Paul J. Lucas <paul@lucasmail.org>
 
+   * AUTHORS: Initial commit.
    * INSTALL: Initial commit.
    * COPYING: Initial commit.
    * c_exception_test.c: Added `continue` test.

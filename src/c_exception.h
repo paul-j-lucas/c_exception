@@ -164,6 +164,9 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  *  printf( "n = %s\n", n );
  *  ```
  *
+ * @warning Within a function that uses a "try" block, you must _never_ use
+ * variable-length arrays.
+ *
  * @warning Within a "try" block, you must _never_ `break` unless it's within
  * your own loop or `switch` due to the way in which <code>%cx_try</code> is
  * implemented.  For example, do _not_ do something like:

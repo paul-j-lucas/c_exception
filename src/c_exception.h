@@ -339,7 +339,7 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  *
  * @note If there is no current #cx_try block, does nothing.
  */
-void cx_cancel_try( void );
+#define cx_cancel_try()           cx_impl_cancel_try( &cx_tb )
 
 /**
  * Gets the current exception, if any.
@@ -467,7 +467,16 @@ bool cx_impl_catch( int xid, cx_impl_try_block_t *tb );
 bool cx_impl_catch_all( cx_impl_try_block_t *tb );
 
 /**
- * Throws \a xid.
+ * Implements #cx_cancel_try().
+ *
+ * @param tb A pointer to the current \ref cx_impl_try_block.
+ *
+ * @sa #cx_cancel_try()
+ */
+void cx_impl_cancel_try( cx_impl_try_block_t *tb );
+
+/**
+ * Implements #cx_throw()
  *
  * @param file The file whence the exception wat thrown.
  * @param line The line number within \a file whence the exception was thrown.

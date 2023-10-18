@@ -124,6 +124,12 @@ static void cx_impl_do_throw( void ) {
 
 ////////// extern implementation functions ////////////////////////////////////
 
+void cx_impl_cancel_try( cx_impl_try_block_t *tb ) {
+  assert( tb != NULL );
+  if ( cx_impl_try_block_head == tb )
+    cx_impl_try_block_head = cx_impl_try_block_head->parent;
+}
+
 bool cx_impl_catch( int catch_xid, cx_impl_try_block_t *tb ) {
   assert( tb != NULL );
   assert( tb->state == CX_IMPL_THROWN );
@@ -167,7 +173,7 @@ bool cx_impl_try_condition( cx_impl_try_block_t *tb ) {
       tb->state = CX_IMPL_FINALLY;
       return true;
     case CX_IMPL_FINALLY:
-      assert( cx_impl_try_block_head != NULL );
+      assert( cx_impl_try_block_head == tb );
       cx_impl_try_block_head = cx_impl_try_block_head->parent;
       if ( tb->thrown_xid != 0 )
         cx_impl_do_throw();             // rethrow uncaught exception
@@ -182,11 +188,6 @@ cx_impl_try_block_t cx_impl_try_init( void ) {
 }
 
 ////////// extern public functions ////////////////////////////////////////////
-
-void cx_cancel_try( void ) {
-  if ( cx_impl_try_block_head != NULL )
-    cx_impl_try_block_head = cx_impl_try_block_head->parent;
-}
 
 cx_exception_t const* cx_current_exception( void ) {
   return cx_impl_exception.file == NULL ? NULL : &cx_impl_exception;

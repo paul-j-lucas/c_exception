@@ -297,7 +297,7 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  *      @code
  *      cx_throw( EX_FILE_NOT_FOUND );
  *      @endcode
- *     that throws a new exception.
+ *     that throws a new exception.  It may be any non-zero value.
  *
  *  2. Without an exception ID:
  *      @code
@@ -480,7 +480,7 @@ void cx_impl_cancel_try( cx_impl_try_block_t *tb );
  *
  * @param file The file whence the exception wat thrown.
  * @param line The line number within \a file whence the exception was thrown.
- * @param xid The exception ID to throw.
+ * @param xid The exception ID to throw.  It may be any non-zero value.
  */
 _Noreturn
 void cx_impl_throw( char const *file, int line, int xid );

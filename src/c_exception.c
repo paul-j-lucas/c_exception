@@ -148,6 +148,8 @@ bool cx_impl_catch_all( cx_impl_try_block_t *tb ) {
 }
 
 void cx_impl_throw( char const *file, int line, int xid ) {
+  assert( file != NULL );
+  assert( line > 0 );
   assert( xid != 0 );
   cx_impl_exception = (cx_exception_t){
     .file = file,

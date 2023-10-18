@@ -1,5 +1,9 @@
 2023-10-17  Paul J. Lucas <paul@lucasmail.org>
 
+   * c_exception.c, c_exception.h: Changed cx_cancel_try() to a macro now
+     passing cx_tb behind the scenes so now it will fail to compile outside of
+     a try block.
+   * c_exception.c: Now being consistent about using cx_impl_ prefix.
    * c_exception.h: Added warning about VLAs.
 
 2023-10-15  Paul J. Lucas <paul@lucasmail.org>

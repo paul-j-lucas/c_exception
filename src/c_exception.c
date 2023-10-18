@@ -127,7 +127,7 @@ static void cx_impl_do_throw( void ) {
 void cx_impl_cancel_try( cx_impl_try_block_t *tb ) {
   assert( tb != NULL );
   if ( cx_impl_try_block_head == tb )
-    cx_impl_try_block_head = cx_impl_try_block_head->parent;
+    cx_impl_try_block_head = tb->parent;
 }
 
 bool cx_impl_catch( int catch_xid, cx_impl_try_block_t *tb ) {
@@ -176,7 +176,7 @@ bool cx_impl_try_condition( cx_impl_try_block_t *tb ) {
       return true;
     case CX_IMPL_FINALLY:
       assert( cx_impl_try_block_head == tb );
-      cx_impl_try_block_head = cx_impl_try_block_head->parent;
+      cx_impl_try_block_head = tb->parent;
       if ( tb->thrown_xid != 0 )
         cx_impl_do_throw();             // rethrow uncaught exception
       cx_impl_exception = (cx_exception_t){ 0 };

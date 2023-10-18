@@ -116,6 +116,28 @@ static bool test_throw_catch_2( void ) {
   TEST_FN_END();
 }
 
+static bool test_throw_catch_all( void ) {
+  TEST_FN_BEGIN();
+  unsigned volatile n_try = 0;
+  unsigned n_catch = 0, n_finally = 0;
+  cx_try {
+    ++n_try;
+    cx_throw( TEST_XID_01 );
+  }
+  cx_catch() {
+    ++n_catch;
+  }
+  cx_finally {
+    ++n_finally;
+    TEST( cx_current_exception() != NULL );
+  }
+  TEST( n_try == 1 );
+  TEST( n_catch == 1 );
+  TEST( n_finally == 1 );
+  TEST( cx_current_exception() == NULL );
+  TEST_FN_END();
+}
+
 static void test_nested_throw( int xid ) {
   cx_throw( xid );
 }
@@ -211,6 +233,7 @@ int main( int argc, char const *argv[] ) {
   TEST( test_no_throw() );
   TEST( test_throw_catch_1() );
   TEST( test_throw_catch_2() );
+  TEST( test_throw_catch_all() );
   TEST( test_nested_throw_catch() );
   TEST( test_custom_xid_matcher() );
   TEST( test_throw_in_catch() );

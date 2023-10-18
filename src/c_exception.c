@@ -161,7 +161,6 @@ void cx_impl_throw( char const *file, int line, int xid ) {
 
 bool cx_impl_try_condition( cx_impl_try_block_t *tb ) {
   assert( tb != NULL );
-
   switch ( tb->state ) {
     case CX_IMPL_INIT:
       tb->parent = cx_impl_try_block_head;

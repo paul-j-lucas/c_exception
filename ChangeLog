@@ -1,3 +1,7 @@
+2023-10-18  Paul J. Lucas <paul@lucasmail.org>
+
+   * c_exception_test.c: Added test_throw_catch_all().
+
 2023-10-17  Paul J. Lucas <paul@lucasmail.org>
 
    * c_exception.c, c_exception.h: Changed cx_cancel_try() to a macro now

@@ -159,8 +159,14 @@ void cx_impl_throw( char const *file, int line, int xid ) {
   cx_impl_do_throw();
 }
 
+#define CX_IMPL_TRY_CONDITION_CALLS (               \
+    1 /* First time: INIT -> TRY, run try code. */  \
+  + 1 /* Second time: run finally code, if any. */  \
+  + 1 /* Third time: in FINALLY state, return false. */ )
+
 bool cx_impl_try_condition( cx_impl_try_block_t *tb ) {
   assert( tb != NULL );
+  assert( ++tb->try_condition_calls <= CX_IMPL_TRY_CONDITION_CALLS );
   switch ( tb->state ) {
     case CX_IMPL_INIT:
       tb->parent = cx_impl_try_block_head;
@@ -168,7 +174,7 @@ bool cx_impl_try_condition( cx_impl_try_block_t *tb ) {
       tb->state = CX_IMPL_TRY;
       return true;
     case CX_IMPL_CAUGHT:
-      tb->thrown_xid = 0;               // reset for CX_IMPL_FINALLY case
+       tb->thrown_xid = 0;               // reset for CX_IMPL_FINALLY case
       FALLTHROUGH;
     case CX_IMPL_TRY:
     case CX_IMPL_THROWN:

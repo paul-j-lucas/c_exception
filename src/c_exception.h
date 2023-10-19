@@ -466,7 +466,7 @@ struct cx_impl_try_block {
  *
  * @param xid The exception ID to catch.  If #CX_XID_ANY, it is always caught.
  * @param tb A pointer to the current \ref cx_impl_try_block.
- * @return Returns `true` if \a xid was caught.
+ * @return Returns `true` only if \a xid was caught.
  */
 bool cx_impl_catch( int xid, cx_impl_try_block_t *tb );
 

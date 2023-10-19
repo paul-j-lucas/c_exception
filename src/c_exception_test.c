@@ -230,13 +230,13 @@ int main( int argc, char const *argv[] ) {
   (void)argc;
   me = argv[0];
 
-  TEST( test_no_throw() );
-  TEST( test_throw_catch_1() );
-  TEST( test_throw_catch_2() );
-  TEST( test_throw_catch_all() );
-  TEST( test_nested_throw_catch() );
-  TEST( test_custom_xid_matcher() );
-  TEST( test_throw_in_catch() );
+  test_no_throw();
+  test_throw_catch_1();
+  test_throw_catch_2();
+  test_throw_catch_all();
+  test_nested_throw_catch();
+  test_custom_xid_matcher();
+  test_throw_in_catch();
 
   printf( "%u failures\n", test_failures );
   exit( test_failures > 0 ? EX_SOFTWARE : EX_OK );

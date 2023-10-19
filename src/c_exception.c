@@ -133,7 +133,7 @@ void cx_impl_cancel_try( cx_impl_try_block_t *tb ) {
 bool cx_impl_catch( int catch_xid, cx_impl_try_block_t *tb ) {
   assert( tb != NULL );
   assert( tb->state == CX_IMPL_THROWN );
-  if ( catch_xid != 0 ) {
+  if ( catch_xid != CX_XID_ANY ) {
     assert( cx_xid_matcher != NULL );
     if ( !(*cx_xid_matcher)( tb->thrown_xid, catch_xid ) )
       return false;

@@ -284,7 +284,9 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  * @sa #cx_catch
  * @sa #cx_throw
  */
-#define cx_finally                else ; else
+#define cx_finally                                \
+      else /* setjmp() != 0 */ /* do nothing */;  \
+    else /* cx_tb.state == CX_IMPL_FINALLY */
 
 /**
  * Throws an exception.

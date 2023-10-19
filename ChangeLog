@@ -1,3 +1,13 @@
+2023-10-19  Paul J. Lucas <paul@lucasmail.org>
+
+   * c_exception.c, c_exception.h, c_exception_test.c: Fixed rethrowing the
+     same exception.
+   * c_exception.c, c_exception.h: Added CX_XID_ANY.
+   * c_exception.c, c_exception.h: Eliminated cx_impl_catch_all().
+   * c_exception_test.c: Test renaming.
+   * c_exception_test.c: Removed redundant TEST() calls.
+   * c_exception.c, c_exception.h: Added try_condition_calls.
+
 2023-10-18  Paul J. Lucas <paul@lucasmail.org>
 
    * c_exception.c: s/cx_impl_try_block_head/tb/

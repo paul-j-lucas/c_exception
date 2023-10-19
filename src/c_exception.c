@@ -134,12 +134,48 @@ bool cx_impl_catch( int catch_xid, cx_impl_try_block_t *tb ) {
   assert( tb != NULL );
   assert( tb->state == CX_IMPL_THROWN );
 
+  if ( tb->caught_xid == tb->thrown_xid ) {
+    //
+    // This can happen when the same exception is thrown from a "catch" block.
+    // For example, given:
+    //
+    //      try {
+    //        try {
+    //          throw( XID_1 );         // 1
+    //        }
+    //        catch( XID_1 ) {          // 2
+    //          throw();                // 3
+    //        }
+    //        finally {                 // 4
+    //          // ...
+    //        }
+    //      }
+    //      catch( XID_1 ) {            // 5
+    //        // ...
+    //      }
+    //
+    // we want the flow to go from 1 to 5 in sequence. If this check were not
+    // here, we'd loop endlessly between 2-3.
+    //
+    // Once an exception is caught at the current try/catch nesting level, it
+    // can never be recaught at the same level.  By returning "false" for all
+    // catches at the current level, we execute the "finally" block, if any, of
+    // the current level; then the CX_IMPL_FINALLY state will pop us up to the
+    // parent level, if any, where this check will fail (because the parent's
+    // caught_xid will be 0) and we can possibly recatch the exception at the
+    // parent level.
+    //
+    return false;
+  }
+
   if ( catch_xid != CX_XID_ANY ) {
     assert( cx_xid_matcher != NULL );
     if ( !(*cx_xid_matcher)( tb->thrown_xid, catch_xid ) )
       return false;
   }
+
   tb->state = CX_IMPL_CAUGHT;
+  tb->caught_xid = tb->thrown_xid;
   return true;
 }
 

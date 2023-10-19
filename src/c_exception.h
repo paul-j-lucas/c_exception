@@ -454,6 +454,7 @@ struct cx_impl_try_block {
   cx_impl_try_block_t  *parent;         ///< Enclosing parent #cx_try, if any.
   cx_impl_state_t       state;          ///< Current state.
   int                   thrown_xid;     ///< Thrown exception ID, if any.
+  int                   caught_xid;     ///< Caught exception ID, if any.
 #ifndef NDEBUG
   /// Prevents infinite loops.
   unsigned              try_condition_calls;

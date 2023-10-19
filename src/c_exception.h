@@ -255,7 +255,7 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  * @sa #cx_try
  */
 #define cx_catch(...) \
-  CX_IMPL_NAME2(CX_IMPL_CATCH_, CX_IMPL_ARGN(CX_IMPL_COMMA __VA_ARGS__ ()))(__VA_ARGS__)
+  CX_IMPL_NAME2(CX_IMPL_CATCH_, CX_IMPL_COUNT(CX_IMPL_COMMA __VA_ARGS__ ()))(__VA_ARGS__)
 
 /**
  * Begins a "finally" block always executing the code in the block after the
@@ -319,7 +319,7 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  * @sa #cx_finally
  */
 #define cx_throw(...) \
-  CX_IMPL_NAME2(CX_IMPL_THROW_, CX_IMPL_ARGN(CX_IMPL_COMMA __VA_ARGS__ ()))(__VA_ARGS__)
+  CX_IMPL_NAME2(CX_IMPL_THROW_, CX_IMPL_COUNT(CX_IMPL_COMMA __VA_ARGS__ ()))(__VA_ARGS__)
 
 /**
  * Cancels a current #cx_try block in the current scope allowing you to then
@@ -412,9 +412,9 @@ void cx_terminate( void );
  * @{
  */
 
-#define CX_IMPL_ARGN(...)         CX_IMPL_COUNT(__VA_ARGS__, 2, 0, 1)
+#define CX_IMPL_ARG_N(_1,_2,N,...) N
 #define CX_IMPL_COMMA(...)        ,
-#define CX_IMPL_COUNT(_1,_2,_3,COUNT,...) COUNT
+#define CX_IMPL_COUNT(...)        CX_IMPL_ARG_N(__VA_ARGS__, 0, 1)
 
 #define CX_IMPL_NAME2(A,B)        CX_IMPL_NAME2_HELPER(A,B)
 #define CX_IMPL_NAME2_HELPER(A,B) A##B

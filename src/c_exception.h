@@ -421,7 +421,7 @@ void cx_terminate( void );
 #define CX_IMPL_NAME2(A,B)        CX_IMPL_NAME2_HELPER(A,B)
 #define CX_IMPL_NAME2_HELPER(A,B) A##B
 
-#define CX_IMPL_CATCH_0()         else if ( cx_impl_catch_all( &cx_tb ) )
+#define CX_IMPL_CATCH_0()         CX_IMPL_CATCH_1( 0 )
 #define CX_IMPL_CATCH_1(XID)      else if ( cx_impl_catch( (XID), &cx_tb ) )
 
 #define CX_IMPL_THROW_0()         CX_IMPL_THROW_1( cx_tb.thrown_xid )
@@ -458,19 +458,11 @@ struct cx_impl_try_block {
 /**
  * Catches exception \a xid.
  *
- * @param xid The exception ID to catch.
+ * @param xid The exception ID to catch.  If 0, it is always caught.
  * @param tb A pointer to the current \ref cx_impl_try_block.
- * @return Returns `true` only if \a xid was caught.
+ * @return Returns `true` if \a xid was caught or \a xid is 0.
  */
 bool cx_impl_catch( int xid, cx_impl_try_block_t *tb );
-
-/**
- * Catches any exception.
- *
- * @param tb A pointer to the current \ref cx_impl_try_block.
- * @return Always returns `true`.
- */
-bool cx_impl_catch_all( cx_impl_try_block_t *tb );
 
 /**
  * Implements #cx_cancel_try().

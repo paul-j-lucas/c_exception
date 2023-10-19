@@ -138,17 +138,17 @@ static bool test_throw_catch_all( void ) {
   TEST_FN_END();
 }
 
-static void test_nested_throw( int xid ) {
+static void test_throw_from_a_called_function_function( int xid ) {
   cx_throw( xid );
 }
 
-static bool test_nested_throw_catch( void ) {
+static bool test_throw_from_a_called_function( void ) {
   TEST_FN_BEGIN();
   unsigned volatile n_try = 0;
   unsigned n_catch = 0, n_finally = 0;
   cx_try {
     ++n_try;
-    test_nested_throw( TEST_XID_01 );
+    test_throw_from_a_called_function_function( TEST_XID_01 );
   }
   cx_catch( TEST_XID_01 ) {
     ++n_catch;
@@ -190,7 +190,7 @@ static bool test_custom_xid_matcher( void ) {
   TEST_FN_END();
 }
 
-static bool test_throw_in_catch( void ) {
+static bool test_throw_from_nested_catch( void ) {
   TEST_FN_BEGIN();
   unsigned volatile n_inner_try = 0, n_outer_try = 0;
   unsigned volatile n_inner_catch = 0, n_inner_finally = 0;
@@ -234,9 +234,9 @@ int main( int argc, char const *argv[] ) {
   test_throw_catch_1();
   test_throw_catch_2();
   test_throw_catch_all();
-  test_nested_throw_catch();
+  test_throw_from_a_called_function();
   test_custom_xid_matcher();
-  test_throw_in_catch();
+  test_throw_from_nested_catch();
 
   printf( "%u failures\n", test_failures );
   exit( test_failures > 0 ? EX_SOFTWARE : EX_OK );

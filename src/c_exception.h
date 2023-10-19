@@ -158,7 +158,7 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  *    // ..
  *    ++n;
  *  }
- *  catch ( EX_FILE_NOT_FOUND ) {
+ *  catch( EX_FILE_NOT_FOUND ) {
  *    // ...
  *  }
  *  printf( "n = %s\n", n );

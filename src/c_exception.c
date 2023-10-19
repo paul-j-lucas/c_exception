@@ -133,6 +133,7 @@ void cx_impl_cancel_try( cx_impl_try_block_t *tb ) {
 bool cx_impl_catch( int catch_xid, cx_impl_try_block_t *tb ) {
   assert( tb != NULL );
   assert( tb->state == CX_IMPL_THROWN );
+
   if ( catch_xid != CX_XID_ANY ) {
     assert( cx_xid_matcher != NULL );
     if ( !(*cx_xid_matcher)( tb->thrown_xid, catch_xid ) )
@@ -146,6 +147,7 @@ void cx_impl_throw( char const *file, int line, int xid ) {
   assert( file != NULL );
   assert( line > 0 );
   assert( xid != 0 );
+
   cx_impl_exception = (cx_exception_t){
     .file = file,
     .line = line,
@@ -162,6 +164,7 @@ void cx_impl_throw( char const *file, int line, int xid ) {
 bool cx_impl_try_condition( cx_impl_try_block_t *tb ) {
   assert( tb != NULL );
   assert( ++tb->try_condition_calls <= CX_IMPL_TRY_CONDITION_CALLS );
+
   switch ( tb->state ) {
     case CX_IMPL_INIT:
       tb->parent = cx_impl_try_block_head;

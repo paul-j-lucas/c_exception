@@ -174,7 +174,7 @@ bool cx_impl_try_condition( cx_impl_try_block_t *tb ) {
       tb->state = CX_IMPL_TRY;
       return true;
     case CX_IMPL_CAUGHT:
-       tb->thrown_xid = 0;               // reset for CX_IMPL_FINALLY case
+      tb->thrown_xid = 0;               // reset for CX_IMPL_FINALLY case
       FALLTHROUGH;
     case CX_IMPL_TRY:
     case CX_IMPL_THROWN:

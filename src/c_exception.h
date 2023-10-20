@@ -30,6 +30,7 @@
 // standard
 #include <setjmp.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 #ifdef __cplusplus
 // While this C library would never be used in a pure C++ program, it may be
@@ -86,6 +87,9 @@ struct cx_exception {
 
   /// The exception ID that was thrown.
   int         thrown_xid;
+
+  /// Optional user-data passed via #cx_throw.
+  void       *user_data;
 };
 typedef struct cx_exception cx_exception_t;
 
@@ -298,20 +302,26 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  *
  * @remarks
  * @parblock
- * This can be called in one of two ways:
+ * This can be called in one of three ways:
  *
  *  1. With an exception ID:
- *      @code
+ *     @code
  *      cx_throw( EX_FILE_NOT_FOUND );
- *      @endcode
+ *     @endcode
  *     that throws a new exception.  It may be any non-zero value.
  *
- *  2. Without an exception ID:
- *      @code
+ *  2. With an exception ID and user-data:
+ *     @code
+ *      cx_throw( EX_FILE_NOT_FOUND, path );
+ *     @endcode
+ *     that throws a new exception passing `path` as a `void*` argument.
+ *
+ *  3. Without no arguments:
+ *     @code
  *      cx_throw();
- *      @endcode
- *     that rethrows the most recent exception.  If no exception has been
- *     caught, calls cx_terminate().
+ *     @endcode
+ *     that rethrows the most recent exception with the same user-data, if any.
+ *     If no exception has been caught, calls cx_terminate().
  * @endparblock
  *
  * @note Unlike C++, the `()` are _required_ with _no_ space between the
@@ -353,8 +363,10 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  *
  * @return If an exception is in progress, returns a pointer to it; otherwise
  * returns NULL.
+ *
+ * @sa cx_user_data()
  */
-cx_exception_t const* cx_current_exception( void );
+cx_exception_t* cx_current_exception( void );
 
 /**
  * Gets the current \ref cx_terminate_handler_t, if any.
@@ -405,6 +417,19 @@ cx_xid_matcher_t cx_set_xid_matcher( cx_xid_matcher_t fn );
 _Noreturn
 void cx_terminate( void );
 
+/**
+ * Gets the user-data, if any, associated with the current exception, if any.
+ *
+ * @return If an exception is in progress, returns the user-data; otherwise
+ * returns NULL.
+ *
+ * @sa cx_current_exception()
+ */
+inline void* cx_user_data( void ) {
+  cx_exception_t *const cex = cx_current_exception();
+  return cex != NULL ? cex->user_data : NULL;
+}
+
 /** @} */
 
 ////////// implementation /////////////////////////////////////////////////////
@@ -451,7 +476,10 @@ void cx_terminate( void );
 #define CX_IMPL_CATCH_1(XID)      else if ( cx_impl_catch( (XID), &cx_tb ) )
 
 #define CX_IMPL_THROW_0()         CX_IMPL_THROW_1( cx_tb.thrown_xid )
-#define CX_IMPL_THROW_1(XID)      cx_impl_throw( __FILE__, __LINE__, (XID) )
+#define CX_IMPL_THROW_1(XID)      CX_IMPL_THROW_2( (XID), cx_user_data() )
+
+#define CX_IMPL_THROW_2(XID,DATA) \
+  cx_impl_throw( __FILE__, __LINE__, (XID), (void*)(DATA) )
 
 /// @endcond
 
@@ -508,9 +536,11 @@ void cx_impl_cancel_try( cx_impl_try_block_t *tb );
  * @param file The file whence the exception wat thrown.
  * @param line The line number within \a file whence the exception was thrown.
  * @param xid The exception ID to throw.  It may be any non-zero value.
+ * @param user_data Optional user-data copied into \ref cx_exception::user_data
+ * "user_data".
  */
 _Noreturn
-void cx_impl_throw( char const *file, int line, int xid );
+void cx_impl_throw( char const *file, int line, int xid, void *user_data );
 
 /**
  * Checks whether the #cx_try, #cx_catch, or #cx_finally code should be

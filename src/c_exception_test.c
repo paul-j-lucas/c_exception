@@ -260,6 +260,27 @@ static bool test_rethrow_in_catch( void ) {
   TEST_FN_END();
 }
 
+static bool test_throw_with_user_data( void ) {
+  TEST_FN_BEGIN();
+  unsigned volatile n_try = 0;
+  unsigned n_catch = 0;
+  int user_data = 0;
+  cx_try {
+    ++n_try;
+    user_data = 42;
+    cx_throw( TEST_XID_01, &user_data );
+  }
+  cx_catch( TEST_XID_01 ) {
+    ++n_catch;
+    int *const pi = cx_user_data();
+    if ( TEST( pi != NULL ) )
+      TEST( *pi == 42 );
+  }
+  TEST( n_try == 1 );
+  TEST( n_catch == 1 );
+  TEST_FN_END();
+}
+
 int main( int argc, char const *argv[] ) {
   (void)argc;
   me = argv[0];
@@ -272,6 +293,7 @@ int main( int argc, char const *argv[] ) {
   test_custom_xid_matcher();
   test_throw_from_nested_catch();
   test_rethrow_in_catch();
+  test_throw_with_user_data();
 
   printf( "%u failures\n", test_failures );
   exit( test_failures > 0 ? EX_SOFTWARE : EX_OK );

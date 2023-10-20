@@ -179,7 +179,7 @@ bool cx_impl_catch( int catch_xid, cx_impl_try_block_t *tb ) {
   return true;
 }
 
-void cx_impl_throw( char const *file, int line, int xid ) {
+void cx_impl_throw( char const *file, int line, int xid, void *user_data ) {
   assert( file != NULL );
   assert( line > 0 );
   assert( xid != 0 );
@@ -187,7 +187,8 @@ void cx_impl_throw( char const *file, int line, int xid ) {
   cx_impl_exception = (cx_exception_t){
     .file = file,
     .line = line,
-    .thrown_xid = xid
+    .thrown_xid = xid,
+    .user_data = user_data
   };
   cx_impl_do_throw();
 }
@@ -231,7 +232,7 @@ cx_impl_try_block_t cx_impl_try_init( void ) {
 
 ////////// extern public functions ////////////////////////////////////////////
 
-cx_exception_t const* cx_current_exception( void ) {
+cx_exception_t* cx_current_exception( void ) {
   return cx_impl_exception.file == NULL ? NULL : &cx_impl_exception;
 }
 
@@ -261,6 +262,8 @@ void cx_terminate( void ) {
   (*cx_impl_terminate_handler)( &cx_impl_exception );
   unreachable();
 }
+
+extern inline void* cx_user_data( void );
 
 ///////////////////////////////////////////////////////////////////////////////
 /* vim:set et sw=2 ts=2: */

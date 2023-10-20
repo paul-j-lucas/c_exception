@@ -260,7 +260,7 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  * @sa #cx_try
  */
 #define cx_catch(...) \
-  CX_IMPL_NAME2(CX_IMPL_CATCH_, CX_IMPL_COUNT(CX_IMPL_COMMA __VA_ARGS__ ()))(__VA_ARGS__)
+  CX_IMPL_NAME2(CX_IMPL_CATCH_, CX_IMPL_NARG(__VA_ARGS__))(__VA_ARGS__)
 
 /**
  * Begins a "finally" block always executing the code in the block after the
@@ -326,7 +326,7 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  * @sa #cx_finally
  */
 #define cx_throw(...) \
-  CX_IMPL_NAME2(CX_IMPL_THROW_, CX_IMPL_COUNT(CX_IMPL_COMMA __VA_ARGS__ ()))(__VA_ARGS__)
+  CX_IMPL_NAME2(CX_IMPL_THROW_, CX_IMPL_NARG(__VA_ARGS__))(__VA_ARGS__)
 
 /**
  * Cancels a current #cx_try block in the current scope allowing you to then
@@ -419,9 +419,30 @@ void cx_terminate( void );
  * @{
  */
 
-#define CX_IMPL_ARG_3(_1,_2,_3,...) _3
+/// @cond DOXYGEN_IGNORE
+
+// See <https://stackoverflow.com/a/11742317/99089>
+
+#define CX_IMPL_ARG_N(_1,_2,_3,_4,_5,_6,_7,_8,_9,N,...) N
 #define CX_IMPL_COMMA(...)        ,
-#define CX_IMPL_COUNT(...)        CX_IMPL_ARG_3(__VA_ARGS__, 0, 1)
+#define CX_IMPL_COMMA_SEQ_N       1, 1, 1, 1, 1, 1, 1, 1, 0, 0
+#define CX_IMPL_NARG_(...)        CX_IMPL_ARG_N( __VA_ARGS__ )
+#define CX_IMPL_REV_SEQ_N         9, 8, 7, 6, 5, 4, 3, 2, 1, 0
+
+#define CX_IMPL_HAS_COMMA(...) \
+  CX_IMPL_NARG_( __VA_ARGS__, CX_IMPL_COMMA_SEQ_N )
+
+#define CX_IMPL_NARG(...)                               \
+  CX_IMPL_NARG_HELPER1(                                 \
+    CX_IMPL_HAS_COMMA( __VA_ARGS__ ),                   \
+    CX_IMPL_HAS_COMMA( CX_IMPL_COMMA __VA_ARGS__ () ),  \
+    CX_IMPL_NARG_( __VA_ARGS__, CX_IMPL_REV_SEQ_N ) )
+
+#define CX_IMPL_NARG_HELPER1(A,B,N)   CX_IMPL_NARG_HELPER2(A, B, N)
+#define CX_IMPL_NARG_HELPER2(A,B,N)   CX_IMPL_NARG_HELPER3_ ## A ## B(N)
+#define CX_IMPL_NARG_HELPER3_01(N)    0
+#define CX_IMPL_NARG_HELPER3_00(N)    1
+#define CX_IMPL_NARG_HELPER3_11(N)    N
 
 #define CX_IMPL_NAME2(A,B)        CX_IMPL_NAME2_HELPER(A,B)
 #define CX_IMPL_NAME2_HELPER(A,B) A##B
@@ -431,6 +452,8 @@ void cx_terminate( void );
 
 #define CX_IMPL_THROW_0()         CX_IMPL_THROW_1( cx_tb.thrown_xid )
 #define CX_IMPL_THROW_1(XID)      cx_impl_throw( __FILE__, __LINE__, (XID) )
+
+/// @endcond
 
 /**
  * Internal state of by \ref cx_impl_try_block.

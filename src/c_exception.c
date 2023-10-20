@@ -195,7 +195,7 @@ void cx_impl_throw( char const *file, int line, int xid ) {
 #define CX_IMPL_TRY_CONDITION_CALLS (                                       \
     1 /* 1st time: INIT -> TRY, run try code. */                            \
   + 1 /* 2nd time: { TRY, THROWN, CAUGHT } -> FINALLY, run finally code. */ \
-  + 1 /* 3rd time: in FINALLY state, return false. */ )
+  + 1 /* 3rd time: FINALLY, return false. */ )
 
 bool cx_impl_try_condition( cx_impl_try_block_t *tb ) {
   assert( tb != NULL );

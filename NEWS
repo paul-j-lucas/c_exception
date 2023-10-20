@@ -5,6 +5,17 @@ See the end of the file for license conditions.
 
 -------------------------------------------------------------------------------
 
+* Changes in C Exception 1.1
+
+** `cx_throw()` with user-data
+`cx_throw()` can now optionally take a 2nd argument of user-data that is copied
+into `cx_exception`.
+
+** `cx_user_data()`
+Added this function as a shorthand for getting the current exception's user-
+data.
+
+
 * Changes in C Exception 1.0
 
 ** Initial version

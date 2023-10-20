@@ -419,9 +419,9 @@ void cx_terminate( void );
  * @{
  */
 
-#define CX_IMPL_ARG_N(_1,_2,N,...) N
+#define CX_IMPL_ARG_3(_1,_2,_3,...) _3
 #define CX_IMPL_COMMA(...)        ,
-#define CX_IMPL_COUNT(...)        CX_IMPL_ARG_N(__VA_ARGS__, 0, 1)
+#define CX_IMPL_COUNT(...)        CX_IMPL_ARG_3(__VA_ARGS__, 0, 1)
 
 #define CX_IMPL_NAME2(A,B)        CX_IMPL_NAME2_HELPER(A,B)
 #define CX_IMPL_NAME2_HELPER(A,B) A##B

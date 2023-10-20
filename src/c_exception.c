@@ -35,6 +35,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * @ingroup c-exception-implementation-group
+ * @{
+ */
+
+/**
+ * Macro that expands into whatever the platform uses to specify that a
+ * variable is thread-local.
+ */
 #if   __STDC_VERSION__ >= 202311L
 # define CX_IMPL_THREAD_LOCAL     thread_local
 #elif __STDC_VERSION__ >= 201112L
@@ -51,11 +62,6 @@
 _Noreturn
 static void cx_impl_default_terminate_handler( cx_exception_t const* );
 static bool cx_impl_default_xid_matcher( int, int );
-
-/**
- * @ingroup c-exception-implementation-group
- * @{
- */
 
 /**
  * Current exception.
@@ -123,6 +129,8 @@ static void cx_impl_do_throw( void ) {
 /** @} */
 
 ////////// extern implementation functions ////////////////////////////////////
+
+/// @cond DOXYGEN_IGNORE
 
 void cx_impl_cancel_try( cx_impl_try_block_t *tb ) {
   assert( tb != NULL );
@@ -264,6 +272,8 @@ void cx_terminate( void ) {
 }
 
 extern inline void* cx_user_data( void );
+
+/// @endcond
 
 ///////////////////////////////////////////////////////////////////////////////
 /* vim:set et sw=2 ts=2: */

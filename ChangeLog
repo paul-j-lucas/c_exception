@@ -1,5 +1,6 @@
 2023-10-20  Paul J. Lucas <paul@lucasmail.org>
 
+   * configure.ac: Updated to 1.1.
    * c_exception.c, c_exception.h, c_exception_test.c: 1. Added optional
      user_data in cx_exception and as a 2nd parameter to #cx_throw(). 2. Added
      cx_user_data() function. 3. Made cx_current_exception() return pointer to

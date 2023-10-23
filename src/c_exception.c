@@ -187,14 +187,15 @@ bool cx_impl_catch( int catch_xid, cx_impl_try_block_t *tb ) {
   return true;
 }
 
-void cx_impl_throw( char const *file, int line, int xid, void *user_data ) {
-  assert( file != NULL );
-  assert( line > 0 );
+void cx_impl_throw( char const *throw_file, int throw_line, int xid,
+                    void *user_data ) {
+  assert( throw_file != NULL );
+  assert( throw_line > 0 );
   assert( xid != 0 );
 
   cx_impl_exception = (cx_exception_t){
-    .thrown_file = file,
-    .thrown_line = line,
+    .thrown_file = throw_file,
+    .thrown_line = throw_line,
     .thrown_xid = xid,
     .user_data = user_data
   };

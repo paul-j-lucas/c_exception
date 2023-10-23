@@ -533,14 +533,16 @@ void cx_impl_cancel_try( cx_impl_try_block_t const *tb );
 /**
  * Implements #cx_throw()
  *
- * @param file The file whence the exception wat thrown.
- * @param line The line number within \a file whence the exception was thrown.
+ * @param throw_file The file whence the exception wat thrown.
+ * @param throw_line The line number within \a throw_file whence the exception
+ * was thrown.
  * @param xid The exception ID to throw.  It may be any non-zero value.
  * @param user_data Optional user-data copied into \ref cx_exception::user_data
  * "user_data".
  */
 _Noreturn
-void cx_impl_throw( char const *file, int line, int xid, void *user_data );
+void cx_impl_throw( char const *throw_file, int throw_line, int xid,
+                    void *user_data );
 
 /**
  * Checks whether the #cx_try, #cx_catch, or #cx_finally code should be

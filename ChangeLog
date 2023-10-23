@@ -1,5 +1,6 @@
 2023-10-23  Paul J. Lucas <paul@lucasmail.org>
 
+   * c_exception.c, c_exception.h: s/file/throw_file/; s/line/throw_line/
    * c_exception.c, c_exception.h: Made cx_impl_cancel_try() take a pointer to
      const.
    * c_exception.c, c_exception.h: s/file/thrown_file/; s/line/thrown_line/

@@ -528,7 +528,7 @@ bool cx_impl_catch( int xid, cx_impl_try_block_t *tb );
  *
  * @sa #cx_cancel_try()
  */
-void cx_impl_cancel_try( cx_impl_try_block_t *tb );
+void cx_impl_cancel_try( cx_impl_try_block_t const *tb );
 
 /**
  * Implements #cx_throw()

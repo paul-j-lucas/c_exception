@@ -132,7 +132,7 @@ static void cx_impl_do_throw( void ) {
 
 /// @cond DOXYGEN_IGNORE
 
-void cx_impl_cancel_try( cx_impl_try_block_t *tb ) {
+void cx_impl_cancel_try( cx_impl_try_block_t const *tb ) {
   assert( tb != NULL );
   if ( cx_impl_try_block_head == tb )
     cx_impl_try_block_head = tb->parent;

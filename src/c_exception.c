@@ -97,7 +97,7 @@ static void cx_impl_default_terminate_handler( cx_exception_t const *cex ) {
   assert( cex != NULL );
   fprintf( stderr,
     "%s:%d: unhandled exception %d (0x%X)\n",
-    cex->file, cex->line,
+    cex->thrown_file, cex->thrown_line,
     cex->thrown_xid, (unsigned)cex->thrown_xid
   );
   abort();
@@ -193,8 +193,8 @@ void cx_impl_throw( char const *file, int line, int xid, void *user_data ) {
   assert( xid != 0 );
 
   cx_impl_exception = (cx_exception_t){
-    .file = file,
-    .line = line,
+    .thrown_file = file,
+    .thrown_line = line,
     .thrown_xid = xid,
     .user_data = user_data
   };
@@ -241,7 +241,7 @@ cx_impl_try_block_t cx_impl_try_init( void ) {
 ////////// extern public functions ////////////////////////////////////////////
 
 cx_exception_t* cx_current_exception( void ) {
-  return cx_impl_exception.file == NULL ? NULL : &cx_impl_exception;
+  return cx_impl_exception.thrown_file == NULL ? NULL : &cx_impl_exception;
 }
 
 cx_terminate_handler_t cx_get_terminate( void ) {

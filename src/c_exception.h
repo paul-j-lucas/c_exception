@@ -80,10 +80,10 @@ extern "C" {
  */
 struct cx_exception {
   /// The file whence the exception was thrown.
-  char const *file;
+  char const *thrown_file;
 
-  /// The line number within \ref file whence the exception was thrown.
-  int         line;
+  /// The line number within \ref thrown_file whence the exception was thrown.
+  int         thrown_line;
 
   /// The exception ID that was thrown.
   int         thrown_xid;

@@ -212,10 +212,10 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  * @sa #cx_finally
  * @sa #cx_throw()
  */
-#define cx_try                                          \
-  for ( cx_impl_try_block_t cx_tb = cx_impl_try_init(); \
-        cx_impl_try_condition( &cx_tb ); )              \
-    if ( cx_tb.state != CX_IMPL_FINALLY )               \
+#define cx_try                                                              \
+  for ( cx_impl_try_block_t cx_tb = cx_impl_try_init( __FILE__, __LINE__ ); \
+        cx_impl_try_condition( &cx_tb ); )                                  \
+    if ( cx_tb.state != CX_IMPL_FINALLY )                                   \
       if ( setjmp( cx_tb.env ) == 0 )
 
 /**
@@ -501,6 +501,8 @@ typedef struct cx_impl_try_block cx_impl_try_block_t;
  * Internal state of #cx_try block.
  */
 struct cx_impl_try_block {
+  char const           *try_file;       ///< File containing the #cx_try.
+  int                   try_line;       ///< Line within \ref try_file.
   jmp_buf               env;            ///< Jump buffer.
   cx_impl_try_block_t  *parent;         ///< Enclosing parent #cx_try, if any.
   cx_impl_state_t       state;          ///< Current state.
@@ -556,9 +558,11 @@ bool cx_impl_try_condition( cx_impl_try_block_t *tb );
 /**
  * Gets an initialized \ref cx_impl_try_block.
  *
+ * @param try_file The file containing the #cx_try.
+ * @param try_line The line withing \ref file containing the #cx_try.
  * @return Returns an initialized \ref cx_impl_try_block.
  */
-cx_impl_try_block_t cx_impl_try_init( void );
+cx_impl_try_block_t cx_impl_try_init( char const *try_file, int try_line );
 
 /** @} */
 

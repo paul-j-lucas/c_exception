@@ -87,6 +87,23 @@ static cx_xid_matcher_t cx_xid_matcher = &cx_impl_default_xid_matcher;
 ////////// local functions ////////////////////////////////////////////////////
 
 /**
+ * Asserts that \a tb is the current \ref cx_impl_try_block.
+ *
+ * @param tb A pointer to the \ref cx_impl_try_block to check.
+ */
+static void cx_impl_assert_try_block( cx_impl_try_block_t const *tb ) {
+  if ( tb == cx_impl_try_block_head )
+    return;
+  fprintf( stderr,
+    "%s:%d: \"try\" not exited cleanly via "
+    "\"break\", \"goto\", or \"return\"\n",
+    cx_impl_try_block_head->try_file,
+    cx_impl_try_block_head->try_line
+  );
+  abort();
+}
+
+/**
  * Default terminate handler.
  *
  * @param cex A pointer to a cx_exception object that has information about the
@@ -222,10 +239,11 @@ bool cx_impl_try_condition( cx_impl_try_block_t *tb ) {
       FALLTHROUGH;
     case CX_IMPL_TRY:
     case CX_IMPL_THROWN:
+      cx_impl_assert_try_block( tb );
       tb->state = CX_IMPL_FINALLY;
       return true;
     case CX_IMPL_FINALLY:
-      assert( cx_impl_try_block_head == tb );
+      cx_impl_assert_try_block( tb );
       cx_impl_try_block_head = tb->parent;
       if ( tb->thrown_xid != 0 )
         cx_impl_do_throw();             // rethrow uncaught exception
@@ -234,9 +252,8 @@ bool cx_impl_try_condition( cx_impl_try_block_t *tb ) {
   } // switch
 }
 
-cx_impl_try_block_t cx_impl_try_init( void ) {
-  static cx_impl_try_block_t const tb;
-  return tb;
+cx_impl_try_block_t cx_impl_try_init( char const *try_file, int try_line ) {
+  return (cx_impl_try_block_t){ .try_file = try_file, .try_line = try_line };
 }
 
 ////////// extern public functions ////////////////////////////////////////////

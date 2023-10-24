@@ -232,10 +232,11 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  * @sa #cx_finally
  * @sa #cx_throw()
  */
-#define cx_try                                                              \
-  for ( cx_impl_try_block_t cx_tb = cx_impl_try_init( __FILE__, __LINE__ ); \
-        cx_impl_try_condition( &cx_tb ); )                                  \
-    if ( cx_tb.state != CX_IMPL_FINALLY )                                   \
+#define cx_try                                            \
+  for ( cx_impl_try_block_t cx_tb =                       \
+          { .try_file = __FILE__, .try_line = __LINE__ }; \
+        cx_impl_try_condition( &cx_tb ); )                \
+    if ( cx_tb.state != CX_IMPL_FINALLY )                 \
       if ( setjmp( cx_tb.env ) == 0 )
 
 /**
@@ -578,15 +579,6 @@ void cx_impl_throw( char const *throw_file, int throw_line, int xid,
  * @return Returns `true` only if the code should be executed.
  */
 bool cx_impl_try_condition( cx_impl_try_block_t *tb );
-
-/**
- * Gets an initialized \ref cx_impl_try_block.
- *
- * @param try_file The file containing the #cx_try.
- * @param try_line The line withing \a try_file containing the #cx_try.
- * @return Returns an initialized \ref cx_impl_try_block.
- */
-cx_impl_try_block_t cx_impl_try_init( char const *try_file, int try_line );
 
 /** @} */
 

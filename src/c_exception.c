@@ -253,10 +253,6 @@ bool cx_impl_try_condition( cx_impl_try_block_t *tb ) {
   } // switch
 }
 
-cx_impl_try_block_t cx_impl_try_init( char const *try_file, int try_line ) {
-  return (cx_impl_try_block_t){ .try_file = try_file, .try_line = try_line };
-}
-
 ////////// extern public functions ////////////////////////////////////////////
 
 cx_exception_t* cx_current_exception( void ) {

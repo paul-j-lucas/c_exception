@@ -38,6 +38,26 @@
 extern "C" {
 #endif /* __cplusplus */
 
+/// @cond DOXYGEN_IGNORE
+
+#ifndef _Noreturn
+# ifdef __cplusplus
+#   if __cplusplus >= 201103L
+#     define _Noreturn                [[noreturn]]
+#   else
+#     define _Noreturn                /* nothing */
+#   endif
+# else /* must be C */
+#   if __STDC_VERSION__ >= 202311L
+#     define _Noreturn                [[noreturn]]
+#   else
+#     /* _Noreturn is fine as-is. */
+#   endif
+# endif /* __cplusplus */
+#endif /* _Noreturn */
+
+/// @endcond
+
 ////////// public /////////////////////////////////////////////////////////////
 
 /**

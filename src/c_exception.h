@@ -359,25 +359,44 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
 
 /**
  * Cancels a current #cx_try, #cx_catch, or #cx_finally block in the current
- * scope allowing you to then safely `goto` out of the block or `return` from
- * the function:
+ * scope allowing you to then safely `break`, `goto` out of the block, or
+ * `return` from the function:
  *  ```c
- *  try {
+ *  cx_try {
  *    // ...
- *    if ( return_early ) {
+ *    if ( some_condition ) {
  *        cx_cancel_try();
  *        return;
  *    }
+ *    // ...
  *  }
  *  ```
  *
  * @warning After calling <code>%cx_cancel_try()</code>, you _must_ exit the
  * block via `break`, `goto`, or `return`.
  *
+ * @warning Any uncaught exception will _not_ be rethrown.
+ *
  * @warning Calling <code>%cx_cancel_try()</code> from a #cx_try or #cx_catch
  * block will result in the #cx_finally block, if any, _not_ being executed.
- *
- * @warning Any uncaught exception will _not_ be rethrown.
+ * An alternative that still executes the #cx_finally block is:
+ *  ```c
+ *  bool volatile return_early = false;
+ *  cx_try {
+ *    // ...
+ *    if ( some_condition ) {
+ *      return_early = true;
+ *      continue;                       // Jumps to finally block, if any.
+ *    }
+ *    // ...
+ *  }
+ *  cx_finally {
+ *    // ...
+ *  }
+ *  if ( return_early )
+ *    return;
+ *  // ...
+ *  ```
  */
 #define cx_cancel_try()           cx_impl_cancel_try( &cx_tb )
 

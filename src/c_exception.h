@@ -190,7 +190,7 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  *  cx_catch( EX_FILE_NOT_FOUND ) {
  *    // ...
  *  }
- *  printf( "n = %s\n", n );
+ *  printf( "n = %d\n", n );
  *  ```
  *
  * @warning Within a function that uses a <code>%cx_try</code> block, you must

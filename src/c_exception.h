@@ -290,7 +290,7 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
 
 /**
  * Begins a "finally" block always executing the code in the block after the
- * code in the #cx_try block and any #cx_catch block.
+ * code in the #cx_try block and any #cx_catch blocks.
  *
  * @remarks Even though C++ doesn't have `finally`, it's provided since C
  * doesn't have destructors to implement
@@ -339,7 +339,7 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  *     @endcode
  *     that throws a new exception passing `path` as a `void*` argument.
  *
- *  3. Without no arguments:
+ *  3. Without arguments from within either a #cx_catch or #cx_finally block:
  *     @code
  *      cx_throw();
  *     @endcode
@@ -438,13 +438,15 @@ cx_xid_matcher_t cx_get_xid_matcher( void );
  * @param fn The new \ref cx_terminate_handler_t or NULL to use the default.
  * @return Returns the previous \ref cx_terminate_handler_t, if any.
  *
+ * @warning Terminate handler functions _must not_ return.
+ *
  * @sa cx_get_terminate()
  * @sa cx_terminate()
  */
 cx_terminate_handler_t cx_set_terminate( cx_terminate_handler_t fn );
 
 /**
- * Sets teh current \ref cx_xid_matcher_t.
+ * Sets the current \ref cx_xid_matcher_t.
  *
  * @param fn The new \ref cx_xid_matcher_t or NULL to use the default.
  * @return Returns the previous \ref cx_xid_matcher_t, if any.

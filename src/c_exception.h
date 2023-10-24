@@ -154,13 +154,13 @@ typedef void (*cx_terminate_handler_t)( cx_exception_t const *cex );
  * then you can do:
  *  ```c
  *  cx_set_xid_matcher( &my_cx_xid_matcher );
- *  try {
+ *  cx_try {
  *    // ...
  *  }
- *  catch( EX_FILE_NOT_FOUND ) {
+ *  cx_catch( EX_FILE_NOT_FOUND ) {
  *    // handle file-not-found specifically
  *  }
- *  catch( EX_FILE_ANY ) {
+ *  cx_catch( EX_FILE_ANY ) {
  *    // handle any other file error
  *  }
  *  ```
@@ -183,11 +183,11 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  * `volatile`:
  *  ```c
  *  int volatile n = 0;
- *  try {
+ *  cx_try {
  *    // ..
  *    ++n;
  *  }
- *  catch( EX_FILE_NOT_FOUND ) {
+ *  cx_catch( EX_FILE_NOT_FOUND ) {
  *    // ...
  *  }
  *  printf( "n = %s\n", n );
@@ -201,7 +201,7 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  * implemented.  For example, do _not_ do something like:
  *  ```c
  *  while ( true ) {
- *    try {
+ *    cx_try {
  *      // ...
  *      if ( some_condition )
  *        break;                        // does NOT break out of while loop
@@ -211,7 +211,7 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  *  ```
  * If possible, put the `while` inside the "try" instead:
  *  ```c
- *  try {
+ *  cx_try {
  *    while ( true ) {
  *      // ...
  *      if ( some_condition )

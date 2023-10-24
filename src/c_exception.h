@@ -473,13 +473,13 @@ inline void* cx_user_data( void ) {
 
 #define CX_IMPL_ARG_N(_1,_2,_3,_4,_5,_6,_7,_8,_9,N,...) N
 #define CX_IMPL_COMMA(...)        ,
-#define CX_IMPL_COMMA_SEQ_N       1, 1, 1, 1, 1, 1, 1, 1, 0, 0
-#define CX_IMPL_NARG_(...)        CX_IMPL_ARG_N( __VA_ARGS__ )
 #define CX_IMPL_REV_SEQ_N         9, 8, 7, 6, 5, 4, 3, 2, 1, 0
 
+#define CX_IMPL_HAS_COMMA_N       1, 1, 1, 1, 1, 1, 1, 1, 0, 0
 #define CX_IMPL_HAS_COMMA(...) \
-  CX_IMPL_NARG_( __VA_ARGS__, CX_IMPL_COMMA_SEQ_N )
+  CX_IMPL_NARG_( __VA_ARGS__, CX_IMPL_HAS_COMMA_N )
 
+#define CX_IMPL_NARG_(...)        CX_IMPL_ARG_N( __VA_ARGS__ )
 #define CX_IMPL_NARG(...)                               \
   CX_IMPL_NARG_HELPER1(                                 \
     CX_IMPL_HAS_COMMA( __VA_ARGS__ ),                   \

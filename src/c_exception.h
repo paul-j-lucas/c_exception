@@ -184,7 +184,7 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  *  ```c
  *  int volatile n = 0;
  *  cx_try {
- *    // ..
+ *    // ...
  *    ++n;
  *  }
  *  cx_catch( EX_FILE_NOT_FOUND ) {

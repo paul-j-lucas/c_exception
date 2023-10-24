@@ -3,7 +3,7 @@
 ## Introduction
 
 **C Exception**
-is a library that implements C++-like exceptions in C++
+is a library that implements C++-like exceptions in C
 using syntax as close as possible to C++.
 In addition to `try`, `catch`, and `throw`,
 it also offers `finally`

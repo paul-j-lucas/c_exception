@@ -178,9 +178,9 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  * Begins a "try" block to be followed by zero or more #cx_catch blocks and
  * zero or one #cx_finally block.
  *
- * @warning Any variables declared outside the "try" block that are modified
- * inside the block and used again outside the block _must_ be declared
- * `volatile`:
+ * @warning Any variables declared outside the <code>%cx_try</code> block that
+ * are modified inside the block and used again outside the block _must_ be
+ * declared `volatile`:
  *  ```c
  *  int volatile n = 0;
  *  cx_try {
@@ -193,12 +193,13 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  *  printf( "n = %s\n", n );
  *  ```
  *
- * @warning Within a function that uses a "try" block, you must _never_ use
- * variable-length arrays.
+ * @warning Within a function that uses a <code>%cx_try</code> block, you must
+ * _never_ use variable-length arrays.
  *
- * @warning Within a "try" block, you must _never_ `break` unless it's within
- * your own loop or `switch` due to the way in which <code>%cx_try</code> is
- * implemented.  For example, do _not_ do something like:
+ * @warning Within a <code>%cx_try</code> block, you must _never_ `break`
+ * unless it's within your own loop or `switch` due to the way in which
+ * <code>%cx_try</code> is implemented.  For example, do _not_ do something
+ * like:
  *  ```c
  *  while ( true ) {
  *    cx_try {
@@ -209,7 +210,7 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  *    // ...
  *  }
  *  ```
- * If possible, put the `while` inside the "try" instead:
+ * If possible, put the `while` inside the <code>%cx_try</code> instead:
  *  ```c
  *  cx_try {
  *    while ( true ) {
@@ -221,11 +222,11 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  *  }
  *  ```
  *
- * @warning Within a "try" block, you must _never_ `goto` outside the block nor
- * `return` from the function. See #cx_cancel_try().
+ * @warning Within a <code>%cx_try</code> block, you must _never_ `goto`
+ * outside the block nor `return` from the function. See #cx_cancel_try().
  *
- * @warning Within a "try" block, `continue` will cause the block to exit
- * immediately and jump to the #cx_finally block, if any.
+ * @warning Within a <code>%cx_try</code> block, `continue` will cause the
+ * block to exit immediately and jump to the #cx_finally block, if any.
  *
  * @sa #cx_cancel_try()
  * @sa #cx_catch()
@@ -263,20 +264,21 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  * @note Unlike the C++ equivalent, the `()` are _required_ with _no_ space
  * between the <code>%cx_catch</code> and the `(`.
  *
- * @note For a given #cx_try block, there may be zero or more "catch" blocks.
- * However, if there are zero, there _must_ be one #cx_finally block.  Multiple
- * "catch" blocks are tried in the order declared and at most one "catch" block
- * will be matched.
+ * @note For a given #cx_try block, there may be zero or more
+ * <code>%cx_catch</code> blocks.  However, if there are zero, there _must_ be
+ * one #cx_finally block.  Multiple <code>%cx_catch</code> blocks are tried in
+ * the order declared and at most one <code>%cx_catch</code> block will be
+ * matched.
  *
- * @warning Similarly to a #cx_try block, within a "catch" block, you must
- * _never_ `break` unless it's within your own loop or `switch` due to the way
- * in which <code>%cx_catch</code> is implemented.
+ * @warning Similarly to a #cx_try block, within a <code>%cx_catch</code>
+ * block, you must _never_ `break` unless it's within your own loop or `switch`
+ * due to the way in which <code>%cx_catch</code> is implemented.
  *
- * @warning Within a "catch" block, you must _never_ `goto` outside the block
- * nor `return` from the function. See #cx_cancel_try().
+ * @warning Within a <code>%cx_catch</code> block, you must _never_ `goto`
+ * outside the block nor `return` from the function. See #cx_cancel_try().
  *
- * @warning Within a "catch" block, `continue` will cause the block to exit
- * immediately and jump to the #cx_finally block, if any.
+ * @warning Within a <code>%cx_catch</code> block, `continue` will cause the
+ * block to exit immediately and jump to the #cx_finally block, if any.
  *
  * @sa #cx_cancel_try()
  * @sa #cx_finally
@@ -294,19 +296,20 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  * doesn't have destructors to implement
  * [RAII](https://en.cppreference.com/w/cpp/language/raii).
  *
- * @note For a given #cx_try block, there may be zero or one "finally" block.
- * However, if there are zero #cx_catch blocks, then there _must_ be one
- * "finally" block.
+ * @note For a given #cx_try block, there may be zero or one
+ * <code>%cx_finally</code> block.  However, if there are zero #cx_catch
+ * blocks, then there _must_ be one <code>%cx_finally</code> block.
  *
- * @warning Similarly to a #cx_try block, within a "finally" block, you must
- * _never_ `break` unless it's within your own loop or `switch` due to the way
- * in which <code>%cx_finally</code> is implemented.
+ * @warning Similarly to a #cx_try block, within a <code>%cx_finally</code>
+ * block, you must _never_ `break` unless it's within your own loop or `switch`
+ * due to the way in which <code>%cx_finally</code> is implemented.
  *
- * @warning Within a "finally" block, you must _never_ `goto` outside the block
- * nor `return` from the function. See #cx_cancel_try().
+ * @warning Within a <code>%cx_finally</code> block, you must _never_ `goto`
+ * outside the block nor `return` from the function. See #cx_cancel_try().
  *
- * @warning Within a "finally" block, `continue` will cause the block to exit
- * immediately.  If there is an uncaught exception, it will be rethrown.
+ * @warning Within a <code>%cx_finally</code> block, `continue` will cause the
+ * block to exit immediately.  If there is an uncaught exception, it will be
+ * rethrown.
  *
  * @sa #cx_cancel_try()
  * @sa #cx_try

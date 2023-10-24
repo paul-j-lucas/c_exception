@@ -14,6 +14,8 @@ and several
 restrictions.
 See the developer documentation for details.
 
+See also [setjmp(), longjmp(), and Exception Handling in C](https://dev.to/pauljlucas/setjmp-longjmp-and-exception-handling-in-c-1h7h).
+
 ## Installation
 
 The git repository contains only the necessary source code.

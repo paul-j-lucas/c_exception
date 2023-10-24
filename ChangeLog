@@ -1,5 +1,6 @@
 2023-10-24  Paul J. Lucas <paul@lucasmail.org>
 
+   * c_exception.h: Added CX_IMPL_DEF_ARGS().
    * c_exception.c, c_exception.h: Eliminated cx_impl_try_init(); moved
      initialization "inline".
    * c_exception.h: Added macros for _Noreturn.

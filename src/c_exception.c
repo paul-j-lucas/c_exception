@@ -92,6 +92,7 @@ static cx_xid_matcher_t cx_xid_matcher = &cx_impl_default_xid_matcher;
  * @param tb A pointer to the \ref cx_impl_try_block to check.
  */
 static void cx_impl_assert_try_block( cx_impl_try_block_t const *tb ) {
+  assert( tb != NULL );
   if ( tb == cx_impl_try_block_head )
     return;
   fprintf( stderr,

@@ -68,7 +68,7 @@ extern "C" {
 # define catch(...)               cx_catch( __VA_ARGS__ )
 # define finally                  cx_finally
 # define throw(...)               cx_throw( __VA_ARGS__ )
-#endif /* CX_USE_TRADITIONAL_KEYWORDS */
+#endif /* !defined(__cplusplus) && CX_USE_TRADITIONAL_KEYWORDS */
 
 /**
  * Matches any exception ID.

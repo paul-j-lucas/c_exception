@@ -1,3 +1,10 @@
+2023-10-24  Paul J. Lucas <paul@lucasmail.org>
+
+   * c_exception.h: Added macros for _Noreturn.
+   * c_exception.c, c_exception.h: cx_cancel_try() will now assert that the
+     current try block is the one at the head of the list.
+   * c_exception.c: Added assert().
+
 2023-10-23  Paul J. Lucas <paul@lucasmail.org>
 
    * c_exception.c, c_exception.h: Now checking try_file and try_line.

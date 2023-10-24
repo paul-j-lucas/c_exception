@@ -503,7 +503,6 @@ inline void* cx_user_data( void ) {
 
 #define CX_IMPL_THROW_0()         CX_IMPL_THROW_1( cx_tb.thrown_xid )
 #define CX_IMPL_THROW_1(XID)      CX_IMPL_THROW_2( (XID), cx_user_data() )
-
 #define CX_IMPL_THROW_2(XID,DATA) \
   cx_impl_throw( __FILE__, __LINE__, (XID), (void*)(DATA) )
 

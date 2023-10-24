@@ -50,7 +50,7 @@ you should compile with the following options:
     -Wno-dangling-else -Wno-shadow
 
 (or equivalent for your compiler)
-to suppress warnings when using the library code.
+to suppress warnings.
 
 **Paul J. Lucas**  
 San Francisco Bay Area, California, USA  

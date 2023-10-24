@@ -205,7 +205,7 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  *    cx_try {
  *      // ...
  *      if ( some_condition )
- *        break;                        // does NOT break out of while loop
+ *        break;                        // Does NOT break out of while loop.
  *    }
  *    // ...
  *  }
@@ -216,7 +216,7 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  *    while ( true ) {
  *      // ...
  *      if ( some_condition )
- *        break;                        // breaks out of while loop
+ *        break;                        // Breaks out of while loop.
  *    }
  *    // ...
  *  }

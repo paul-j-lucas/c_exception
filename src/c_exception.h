@@ -284,8 +284,7 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  * @sa #cx_throw()
  * @sa #cx_try
  */
-#define cx_catch(...) \
-  CX_IMPL_NAME2(CX_IMPL_CATCH_, CX_IMPL_NARG(__VA_ARGS__))(__VA_ARGS__)
+#define cx_catch(...)             CX_IMPL_DEF_ARGS(CX_IMPL_CATCH_, __VA_ARGS__)
 
 /**
  * Begins a "finally" block always executing the code in the block after the
@@ -356,8 +355,7 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  * @sa #cx_catch()
  * @sa #cx_finally
  */
-#define cx_throw(...) \
-  CX_IMPL_NAME2(CX_IMPL_THROW_, CX_IMPL_NARG(__VA_ARGS__))(__VA_ARGS__)
+#define cx_throw(...)             CX_IMPL_DEF_ARGS(CX_IMPL_THROW_, __VA_ARGS__)
 
 /**
  * Cancels a current #cx_try, #cx_catch, or #cx_finally block in the current
@@ -496,6 +494,9 @@ inline void* cx_user_data( void ) {
 
 #define CX_IMPL_NAME2(A,B)        CX_IMPL_NAME2_HELPER(A,B)
 #define CX_IMPL_NAME2_HELPER(A,B) A##B
+
+#define CX_IMPL_DEF_ARGS(PREFIX,...) \
+  CX_IMPL_NAME2(PREFIX, CX_IMPL_NARG(__VA_ARGS__))(__VA_ARGS__)
 
 #define CX_IMPL_CATCH_0()         CX_IMPL_CATCH_1( CX_XID_ANY )
 #define CX_IMPL_CATCH_1(XID)      else if ( cx_impl_catch( (XID), &cx_tb ) )

@@ -47,8 +47,8 @@ you should compile with the following options:
 
     -Wno-dangling-else -Wno-shadow
 
-(or eqivalent for your compiler)
-to suppress warnings in the library code.
+(or equivalent for your compiler)
+to suppress warnings when using the library code.
 
 **Paul J. Lucas**  
 San Francisco Bay Area, California, USA  

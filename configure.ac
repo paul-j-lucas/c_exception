@@ -4,7 +4,7 @@
 #       C Exception -- Exception Library for C
 #       configure.ac
 #
-#       Copyright (C) 2023  Paul J. Lucas
+#       Copyright (C) 2023-2024  Paul J. Lucas
 #
 #       This program is free software: you can redistribute it and/or modify
 #       it under the terms of the GNU General Public License as published by

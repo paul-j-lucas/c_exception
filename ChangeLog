@@ -1,5 +1,8 @@
 2024-01-12  Paul J. Lucas <paul@lucasmail.org>
 
+   * Doxyfile, Makefile.am, bootstrap, c_exception.css, configure.ac,
+     makedoc.sh, src/Makefile.am, c_exception.c, c_exception.h,
+     c_exception_test.c, unit_test.h: Updated copyright year.
    * c_exception.c, c_exception.h: Made cx_terminate() static and removed from
      API.
 

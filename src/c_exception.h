@@ -350,6 +350,9 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  * @note Unlike C++, the `()` are _required_ with _no_ space between the
  * <code>%cx_throw</code> and the `(`.
  *
+ * @warning If user-data is supplied and it's an actual pointer, the object to
+ * which it points must _not_ be a local variable that will go out of scope.
+ *
  * @warning An exception that is thrown but not caught will result in
  * cx_terminate() being called.
  *

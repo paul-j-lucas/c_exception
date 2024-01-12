@@ -62,6 +62,8 @@
 _Noreturn
 static void cx_impl_default_terminate_handler( cx_exception_t const* );
 static bool cx_impl_default_xid_matcher( int, int );
+_Noreturn
+static void cx_terminate( void );
 
 /**
  * Current exception.
@@ -142,6 +144,19 @@ static void cx_impl_do_throw( void ) {
   cx_impl_try_block_head->state = CX_IMPL_THROWN;
   cx_impl_try_block_head->thrown_xid = cx_impl_exception.thrown_xid;
   longjmp( cx_impl_try_block_head->env, 1 );
+}
+
+/**
+ * Calls the current \ref cx_terminate_handler_t function.
+ *
+ * @sa cx_get_terminate()
+ * @sa cx_set_terminate()
+ */
+_Noreturn
+static void cx_terminate( void ) {
+  assert( cx_impl_terminate_handler != NULL );
+  (*cx_impl_terminate_handler)( &cx_impl_exception );
+  unreachable();
 }
 
 /** @} */
@@ -278,12 +293,6 @@ cx_xid_matcher_t cx_set_xid_matcher( cx_xid_matcher_t fn ) {
   cx_xid_matcher_t const rv = cx_xid_matcher;
   cx_xid_matcher = fn == NULL ? &cx_impl_default_xid_matcher : fn;
   return rv;
-}
-
-void cx_terminate( void ) {
-  assert( cx_impl_terminate_handler != NULL );
-  (*cx_impl_terminate_handler)( &cx_impl_exception );
-  unreachable();
 }
 
 extern inline void* cx_user_data( void );

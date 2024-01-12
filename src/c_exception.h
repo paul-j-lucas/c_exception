@@ -459,15 +459,6 @@ cx_terminate_handler_t cx_set_terminate( cx_terminate_handler_t fn );
 cx_xid_matcher_t cx_set_xid_matcher( cx_xid_matcher_t fn );
 
 /**
- * Calls the current \ref cx_terminate_handler_t function.
- *
- * @sa cx_get_terminate()
- * @sa cx_set_terminate()
- */
-_Noreturn
-void cx_terminate( void );
-
-/**
  * Gets the user-data, if any, associated with the current exception, if any.
  *
  * @return If an exception is in progress, returns the user-data; otherwise

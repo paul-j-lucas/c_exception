@@ -1,3 +1,8 @@
+2024-01-12  Paul J. Lucas <paul@lucasmail.org>
+
+   * c_exception.c, c_exception.h: Made cx_terminate() static and removed from
+     API.
+
 2023-10-24  Paul J. Lucas <paul@lucasmail.org>
 
    * c_exception.h: s/CX_IMPL_COMMA_SEQ_N/CX_IMPL_HAS_COMMA_N/

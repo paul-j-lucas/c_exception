@@ -1,3 +1,8 @@
+2024-03-19  Paul J. Lucas <paul@lucasmail.org>
+
+   * configure.ac, c_exception.c: cx_set_terminate() & cx_set_xid_matcher() now
+     correctly return NULL for their default values.
+
 2024-01-12  Paul J. Lucas <paul@lucasmail.org>
 
    * Doxyfile, Makefile.am, bootstrap, c_exception.css, configure.ac,

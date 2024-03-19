@@ -284,13 +284,14 @@ cx_xid_matcher_t cx_get_xid_matcher( void ) {
 }
 
 cx_terminate_handler_t cx_set_terminate( cx_terminate_handler_t fn ) {
-  cx_terminate_handler_t const rv = cx_impl_terminate_handler;
-  cx_impl_terminate_handler = fn == NULL ? &cx_impl_default_terminate_handler : fn;
+  cx_terminate_handler_t const rv = cx_get_terminate();
+  cx_impl_terminate_handler = fn == NULL ?
+    &cx_impl_default_terminate_handler : fn;
   return rv;
 }
 
 cx_xid_matcher_t cx_set_xid_matcher( cx_xid_matcher_t fn ) {
-  cx_xid_matcher_t const rv = cx_xid_matcher;
+  cx_xid_matcher_t const rv = cx_get_xid_matcher();
   cx_xid_matcher = fn == NULL ? &cx_impl_default_xid_matcher : fn;
   return rv;
 }

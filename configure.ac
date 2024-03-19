@@ -21,7 +21,7 @@
 ##
 
 AC_PREREQ([2.69])
-AC_INIT([c_exception],[1.1],[https://github.com/paul-j-lucas/c_exception/issues],[],[https://github.com/paul-j-lucas/c_exception])
+AC_INIT([c_exception],[1.1.1],[https://github.com/paul-j-lucas/c_exception/issues],[],[https://github.com/paul-j-lucas/c_exception])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 

@@ -1,3 +1,7 @@
+2024-09-01  Paul J. Lucas <paul@lucasmail.org>
+
+   * c_exception.c: Removed unnecessary assert().
+
 2024-03-19  Paul J. Lucas <paul@lucasmail.org>
 
    * configure.ac, c_exception.c: cx_set_terminate() & cx_set_xid_matcher() now
@@ -84,7 +88,6 @@
    * c_exception_test.c: Added `continue` test.
    * c_exception_test.c: Changed test_xid_matcher() to use masking.
    * c_exception.c: Got rid of CX_IMPL_FINALLY checks.
-   * c_exception.c, c_exception.h: Renaming.
    * c_exception_test.c: Only n_try is volatile.
    * configure.ac: Added -Wno-dangling-else.
    * c_exception.c, c_exception.h, c_exception_test.c: More docs; testing

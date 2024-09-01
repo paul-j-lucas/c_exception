@@ -166,7 +166,6 @@ static void cx_terminate( void ) {
 /// @cond DOXYGEN_IGNORE
 
 void cx_impl_cancel_try( cx_impl_try_block_t const *tb ) {
-  assert( tb != NULL );
   cx_impl_assert_try_block( tb );
   cx_impl_try_block_head = tb->parent;
 }

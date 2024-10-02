@@ -32,7 +32,7 @@ you can generate `configure` yourself by doing:
     ./bootstrap
 
 Then follow the generic installation instructions given in
-[`INSTALL`](https://github.com/paul-j-lucas/cdecl/blob/c_exception/INSTALL).
+[`INSTALL`](https://github.com/paul-j-lucas/c_exception/blob/master/INSTALL).
 
 If you would like to generate the developer documentation,
 you will also need

@@ -3,6 +3,5 @@
 /stddef.h
 /stdlib.h
 /stdnoreturn.h
-/sys
 /sysexits.h
 /unistd.h

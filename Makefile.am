@@ -22,6 +22,7 @@ ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = lib src
 
 EXTRA_DIST =	bootstrap \
+		c_exception.css \
 		Doxyfile \
 		m4/gnulib-cache.m4 \
 		makedoc.sh \

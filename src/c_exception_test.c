@@ -44,7 +44,7 @@ static unsigned   test_failures;
 
 static bool test_no_throw( void ) {
   TEST_FN_BEGIN();
-  unsigned n_try = 0, n_catch = 0, n_finally = 0;
+  unsigned volatile n_try = 0, n_catch = 0, n_finally = 0;
   cx_try {
     ++n_try;
   }
@@ -65,7 +65,7 @@ static bool test_no_throw( void ) {
 static bool test_throw_catch_1( void ) {
   TEST_FN_BEGIN();
   unsigned volatile n_try = 0;
-  unsigned n_catch_1 = 0, n_catch_2 = 0, n_finally = 0;
+  unsigned volatile n_catch_1 = 0, n_catch_2 = 0, n_finally = 0;
   cx_try {
     ++n_try;
     cx_throw( TEST_XID_01 );
@@ -92,7 +92,7 @@ static bool test_throw_catch_1( void ) {
 static bool test_throw_catch_2( void ) {
   TEST_FN_BEGIN();
   unsigned volatile n_try = 0;
-  unsigned n_catch_1 = 0, n_catch_2 = 0, n_finally = 0;
+  unsigned volatile n_catch_1 = 0, n_catch_2 = 0, n_finally = 0;
   cx_try {
     ++n_try;
     cx_throw( TEST_XID_02 );
@@ -119,7 +119,7 @@ static bool test_throw_catch_2( void ) {
 static bool test_throw_catch_all( void ) {
   TEST_FN_BEGIN();
   unsigned volatile n_try = 0;
-  unsigned n_catch = 0, n_finally = 0;
+  unsigned volatile n_catch = 0, n_finally = 0;
   cx_try {
     ++n_try;
     cx_throw( TEST_XID_01 );
@@ -145,7 +145,7 @@ static void test_throw_from_a_called_function_function( int xid ) {
 static bool test_throw_from_a_called_function( void ) {
   TEST_FN_BEGIN();
   unsigned volatile n_try = 0;
-  unsigned n_catch = 0, n_finally = 0;
+  unsigned volatile n_catch = 0, n_finally = 0;
   cx_try {
     ++n_try;
     test_throw_from_a_called_function_function( TEST_XID_01 );
@@ -194,7 +194,7 @@ static bool test_throw_from_nested_catch( void ) {
   TEST_FN_BEGIN();
   unsigned volatile n_inner_try = 0, n_outer_try = 0;
   unsigned volatile n_inner_catch = 0, n_inner_finally = 0;
-  unsigned n_outer_catch = 0, n_outer_finally = 0;
+  unsigned volatile n_outer_catch = 0, n_outer_finally = 0;
   cx_try {
     ++n_outer_try;
     cx_try {
@@ -229,7 +229,7 @@ static bool test_rethrow_in_catch( void ) {
   TEST_FN_BEGIN();
   unsigned volatile n_inner_try = 0, n_outer_try = 0;
   unsigned volatile n_inner_catch = 0, n_inner_finally = 0;
-  unsigned n_outer_catch = 0, n_outer_finally = 0;
+  unsigned volatile n_outer_catch = 0, n_outer_finally = 0;
   cx_try {
     ++n_outer_try;
     cx_try {
@@ -263,7 +263,7 @@ static bool test_rethrow_in_catch( void ) {
 static bool test_throw_with_user_data( void ) {
   TEST_FN_BEGIN();
   unsigned volatile n_try = 0;
-  unsigned n_catch = 0;
+  unsigned volatile n_catch = 0;
   int user_data = 0;
   cx_try {
     ++n_try;

@@ -1,3 +1,14 @@
+2025-07-04  Paul J. Lucas <paul@lucasmail.org>
+
+   * c_exception_test.c: Added volatile.
+   * configure.ac: Added -Wno-empty-body.
+   * configure.ac: Added -Wempty-body.
+   * c_exception.c: Added unreachable.
+
+2025-05-16  Paul J. Lucas <paul@lucasmail.org>
+
+   * Makefile.am: Added missing c_exception.css.
+
 2024-09-01  Paul J. Lucas <paul@lucasmail.org>
 
    * c_exception.c: Removed unnecessary assert().

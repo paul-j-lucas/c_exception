@@ -265,6 +265,8 @@ bool cx_impl_try_condition( cx_impl_try_block_t *tb ) {
       cx_impl_exception = (cx_exception_t){ 0 };
       return false;
   } // switch
+
+  unreachable();
 }
 
 ////////// extern public functions ////////////////////////////////////////////

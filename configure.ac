@@ -108,6 +108,7 @@ AX_CHECK_COMPILE_FLAG([-Wconversion], [C_EXCEPTION_CFLAGS="$C_EXCEPTION_CFLAGS -
 AX_CHECK_COMPILE_FLAG([-Wno-dangling-else], [C_EXCEPTION_CFLAGS="$C_EXCEPTION_CFLAGS -Wno-dangling-else"], [], [-Werror])
 AX_CHECK_COMPILE_FLAG([-Wduplicate-enum], [C_EXCEPTION_CFLAGS="$C_EXCEPTION_CFLAGS -Wduplicate-enum"], [], [-Werror])
 AX_CHECK_COMPILE_FLAG([-Wembedded-directive], [C_EXCEPTION_CFLAGS="$C_EXCEPTION_CFLAGS -Wembedded-directive"], [], [-Werror])
+AX_CHECK_COMPILE_FLAG([-Wempty-body], [C_EXCEPTION_CFLAGS="$C_EXCEPTION_CFLAGS -Wempty-body"], [], [-Werror])
 AX_CHECK_COMPILE_FLAG([-Wenum-enum-conversion], [C_EXCEPTION_CFLAGS="$C_EXCEPTION_CFLAGS -Wenum-enum-conversion"], [], [-Werror])
 AX_CHECK_COMPILE_FLAG([-Wenum-float-conversion], [C_EXCEPTION_CFLAGS="$C_EXCEPTION_CFLAGS -Wenum-float-conversion"], [], [-Werror])
 AX_CHECK_COMPILE_FLAG([-Wextra], [C_EXCEPTION_CFLAGS="$C_EXCEPTION_CFLAGS -Wextra"], [], [-Werror])

@@ -1,3 +1,7 @@
+2025-10-06  Paul J. Lucas <paul@lucasmail.org>
+
+   * configure.ac: Now letting Autotools add INSTALL.
+
 2025-07-04  Paul J. Lucas <paul@lucasmail.org>
 
    * c_exception_test.c: Added volatile.

@@ -140,7 +140,6 @@ PJL_CHECK_COMPILE_FLAG([-Wunreachable-code-return], [C_EXCEPTION_CFLAGS])
 PJL_CHECK_COMPILE_FLAG([-Wunreachable-code], [C_EXCEPTION_CFLAGS])
 PJL_CHECK_COMPILE_FLAG([-Wunused], [C_EXCEPTION_CFLAGS])
 PJL_CHECK_COMPILE_FLAG([-Wwrite-strings], [C_EXCEPTION_CFLAGS])
-PJL_CHECK_COMPILE_FLAG([-Wzero-as-null-pointer-constant], [C_EXCEPTION_CFLAGS])
 
 # Generate files.
 AH_TOP([#ifndef c_exception_config_H

@@ -31,7 +31,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 // extern variables
-char const       *me;
+char const       *prog_name;
 
 // local variables
 static unsigned   test_failures;
@@ -283,7 +283,7 @@ static bool test_throw_with_user_data( void ) {
 
 int main( int argc, char const *argv[] ) {
   (void)argc;
-  me = argv[0];
+  prog_name = argv[0];
 
   test_no_throw();
   test_throw_catch_1();

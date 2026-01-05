@@ -1,3 +1,21 @@
+2025-11-15  Paul J. Lucas <paul@lucasmail.org>
+
+   * Makefile.am, ax_cflags_warn_all.m4, ax_check_compile_flag.m4,
+     update_m4.sh: Added update_m4.sh.
+
+2025-11-01  Paul J. Lucas <paul@lucasmail.org>
+
+   * Makefile.am, makedoc.sh: makedoc.sh now takes parameters (copied from
+     cdecl).
+
+2025-10-23  Paul J. Lucas <paul@lucasmail.org>
+
+   * c_exception_test.c, unit_test.h: s/me/prog_name/
+
+2025-10-20  Paul J. Lucas <paul@lucasmail.org>
+
+   * configure.ac: Removed -Wundef.
+
 2025-10-18  Paul J. Lucas <paul@lucasmail.org>
 
    * configure.ac: Removed -Wzero-as-null-pointer-constant -- not valid for C.
@@ -33,9 +51,6 @@
 
 2024-01-12  Paul J. Lucas <paul@lucasmail.org>
 
-   * Doxyfile, Makefile.am, bootstrap, c_exception.css, configure.ac,
-     makedoc.sh, src/Makefile.am, c_exception.c, c_exception.h,
-     c_exception_test.c, unit_test.h: Updated copyright year.
    * c_exception.c, c_exception.h: Made cx_terminate() static and removed from
      API.
 

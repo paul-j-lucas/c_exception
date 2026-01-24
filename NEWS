@@ -5,6 +5,12 @@ See the end of the file for license conditions.
 
 -------------------------------------------------------------------------------
 
+* Changes in C Exception 1.2
+
+** `libtool`
+Now using `libtool`.
+
+
 * Changes in C Exception 1.1.1
 
 ** `cx_set_terminate()` & `cx_set_xid_matcher()`

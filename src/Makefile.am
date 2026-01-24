@@ -18,36 +18,34 @@
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-noinst_LIBRARIES =	libc_exception.a
-check_PROGRAMS=	c_exception_test
+lib_LTLIBRARIES =		libc_exception.la
+include_HEADERS =		c_exception.h
 
-AM_CFLAGS =	$(C_EXCEPTION_CFLAGS)
-
-c_exception_test_LDADD = libc_exception.a
-
+AM_CFLAGS =			$(C_EXCEPTION_CFLAGS)
 if ENABLE_ASAN
-AM_CFLAGS +=	-fsanitize=address -fno-omit-frame-pointer
+AM_CFLAGS +=			-fsanitize=address -fno-omit-frame-pointer
 endif
-
 if ENABLE_MSAN
-AM_CFLAGS +=	-fsanitize=memory -fno-omit-frame-pointer
+AM_CFLAGS +=			-fsanitize=memory -fno-omit-frame-pointer
 endif
-
 if ENABLE_UBSAN
-AM_CFLAGS +=	-fsanitize=undefined
+AM_CFLAGS +=			-fsanitize=undefined
 endif
 
-AM_CPPFLAGS =	-I$(top_srcdir)/lib -I$(top_builddir)/lib
-LDADD =		$(top_builddir)/lib/libgnu.a
+AM_CPPFLAGS =			-I$(top_srcdir)/lib -I$(top_builddir)/lib
+LDADD =				$(top_builddir)/lib/libgnu.a
 
-libc_exception_a_SOURCES = \
-		c_exception.c c_exception.h
+libc_exception_la_LDFLAGS =	-version-info 1:0:0
 
-c_exception_test_SOURCES = \
-		$(c_exception_SOURCES) \
-		c_exception_test.c \
-		unit_test.h
+libc_exception_la_SOURCES =	c_exception.c c_exception.h
 
-TESTS =		$(check_PROGRAMS)
+check_PROGRAMS =		c_exception_test
+c_exception_test_SOURCES =	$(c_exception_SOURCES) \
+				c_exception_test.c \
+				unit_test.h
+
+c_exception_test_LDADD =	libc_exception.la
+
+TESTS =				$(check_PROGRAMS)
 
 # vim:set noet sw=8 ts=8:

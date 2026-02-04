@@ -18,14 +18,15 @@
 #       along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-PROJECT_NAME            = "C_Exception"
+PROJECT_NAME            = "C Exception"
 PROJECT_BRIEF           = "Exception library for C."
 
 INPUT                   = README.md src
 FILE_PATTERNS           = *.c *.h *.md
-FILTER_PATTERNS         = "*.h=sed s/[A-Z][A-Z_]*[A-Z]_H_INLINE/inline/"
+FILTER_PATTERNS         = "*.[ch]=sed -f Doxygen.sed"
 PREDEFINED              = __GNUC__
 EXCLUDE                 = src/config.h
+
 OUTPUT_DIRECTORY        = docs
 HTML_EXTRA_STYLESHEET   = c_exception.css
 HTML_OUTPUT             = .
@@ -59,6 +60,7 @@ STRIP_CODE_COMMENTS     = NO
 TAB_SIZE                = 2
 TYPEDEF_HIDES_STRUCT    = YES
 USE_MDFILE_AS_MAINPAGE  = README.md
+WARN_IF_UNDOC_ENUM_VAL  = YES
 WARN_NO_PARAMDOC        = YES
 
 # vim:set et sw=4 ts=4:

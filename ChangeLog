@@ -1,3 +1,7 @@
+2026-02-03  Paul J. Lucas <paul@lucasmail.org>
+
+   * Doxyfile: Added PAGE_OUTLINE_PANEL.
+
 2026-01-23  Paul J. Lucas <paul@lucasmail.org>
 
    * configure.ac: Updated version.

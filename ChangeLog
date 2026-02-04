@@ -1,3 +1,8 @@
+2026-01-23  Paul J. Lucas <paul@lucasmail.org>
+
+   * configure.ac: Updated version.
+   * configure.ac, src/Makefile.am: Now using libtool.
+
 2025-11-15  Paul J. Lucas <paul@lucasmail.org>
 
    * Makefile.am, ax_cflags_warn_all.m4, ax_check_compile_flag.m4,

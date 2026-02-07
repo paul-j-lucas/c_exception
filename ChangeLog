@@ -1,3 +1,9 @@
+2026-02-06  Paul J. Lucas <paul@lucasmail.org>
+
+   * ax_require_defined.m4: Added ax_require_defined.m4.
+   * ax_prepend_flag.m4: Added ax_prepend_flag.m4.
+   * ax_compiler_vendor.m4: Added ax_compiler_vendor.m4.
+
 2026-02-03  Paul J. Lucas <paul@lucasmail.org>
 
    * Doxyfile: Added PAGE_OUTLINE_PANEL.

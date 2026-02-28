@@ -1,3 +1,7 @@
+2026-02-27  Paul J. Lucas <paul@lucasmail.org>
+
+   * configure.ac, src/Makefile.am: Now using LT_CURRENT, etc.
+
 2026-02-06  Paul J. Lucas <paul@lucasmail.org>
 
    * ax_require_defined.m4: Added ax_require_defined.m4.

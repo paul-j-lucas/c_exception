@@ -31,6 +31,8 @@
 // standard
 #include <assert.h>
 #include <attribute.h>
+#include <setjmp.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -35,8 +35,8 @@ endif
 AM_CPPFLAGS =			-I$(top_srcdir)/lib -I$(top_builddir)/lib
 LDADD =				$(top_builddir)/lib/libgnu.a
 
-INVOKE_TIDY_FLAGS =		-Xtidy --verbose=f -Xtidy --error=never
-INVOKE_TIDY_CFLAGS =		$(CFLAGS) $(AM_CFLAGS) $(CPPFLAGS) $(AM_CPPFLAGS)
+TIDY_FLAGS =			-Xtidy --verbose=f -Xtidy --error=never
+TIDY_CFLAGS =			$(CFLAGS) $(AM_CFLAGS) $(CPPFLAGS) $(AM_CPPFLAGS)
 
 libc_exception_la_LDFLAGS =	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
 
@@ -52,8 +52,9 @@ c_exception_test_LDADD =	libc_exception.la
 TESTS =				$(check_PROGRAMS)
 
 tidy:
-	@for file in *.h *.c; \
-	do include-tidy $(INVOKE_TIDY_FLAGS) $(INVOKE_TIDY_CFLAGS) $$file; \
+	@for file in *.h *.c; do \
+	  [ ! -f "$$file" ] || \
+	    include-tidy $(TIDY_FLAGS) $(TIDY_CFLAGS) "$$file"; \
 	done
 
 # vim:set noet sw=8 ts=8:

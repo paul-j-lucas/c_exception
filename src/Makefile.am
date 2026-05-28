@@ -36,7 +36,9 @@ AM_CPPFLAGS =			-I$(top_srcdir)/lib -I$(top_builddir)/lib
 LDADD =				$(top_builddir)/lib/libgnu.a
 
 TIDY_FLAGS =			-Xtidy --verbose=f -Xtidy --error=never
-TIDY_CFLAGS =			$(CFLAGS) $(AM_CFLAGS) $(CPPFLAGS) $(AM_CPPFLAGS)
+TIDY_CFLAGS =			$(CFLAGS) $(AM_CFLAGS) \
+				$(CPPFLAGS) $(AM_CPPFLAGS) \
+				-D_GL_CONFIG_H_INCLUDED
 
 libc_exception_la_LDFLAGS =	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
 
@@ -54,7 +56,8 @@ TESTS =				$(check_PROGRAMS)
 tidy:
 	@for file in *.h *.c; do \
 	  [ ! -f "$$file" ] || \
-	    include-tidy $(TIDY_FLAGS) $(TIDY_CFLAGS) "$$file"; \
+	    include-tidy $(TIDY_FLAGS) $(TIDY_CFLAGS) "$$file" || \
+	    exit $$?; \
 	done
 
 # vim:set noet sw=8 ts=8:

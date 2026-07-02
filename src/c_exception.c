@@ -60,12 +60,15 @@
 # error "Don't know how to declare thread-local variables on this platform."
 #endif
 
-// local functions
+////////// local functions ////////////////////////////////////////////////////
+
 _Noreturn
 static void cx_impl_default_terminate_handler( cx_exception_t const* );
 static bool cx_impl_default_xid_matcher( int, int );
 _Noreturn
 static void cx_terminate( void );
+
+////////// local variables ////////////////////////////////////////////////////
 
 /**
  * Current exception.

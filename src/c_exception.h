@@ -58,7 +58,7 @@ extern "C" {
 
 /// @endcond
 
-////////// public /////////////////////////////////////////////////////////////
+////////// public macros //////////////////////////////////////////////////////
 
 /**
  * @defgroup c-exception-public-api-group Public API
@@ -95,22 +95,8 @@ extern "C" {
  */
 #define CX_XID_ANY                0
 
-/**
- * Contains information about a thrown exception.
- */
-struct cx_exception {
-  /// The file whence the exception was thrown.
-  char const *thrown_file;
+////////// public typedefs ////////////////////////////////////////////////////
 
-  /// The line number within \ref thrown_file whence the exception was thrown.
-  int         thrown_line;
-
-  /// The exception ID that was thrown.
-  int         thrown_xid;
-
-  /// Optional user-data passed via #cx_throw.
-  void       *user_data;
-};
 typedef struct cx_exception cx_exception_t;
 
 /**
@@ -173,6 +159,27 @@ typedef void (*cx_terminate_handler_t)( cx_exception_t const *cex );
  * @sa cx_set_xid_matcher()
  */
 typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
+
+////////// public structs /////////////////////////////////////////////////////
+
+/**
+ * Contains information about a thrown exception.
+ */
+struct cx_exception {
+  /// The file whence the exception was thrown.
+  char const *thrown_file;
+
+  /// The line number within \ref thrown_file whence the exception was thrown.
+  int         thrown_line;
+
+  /// The exception ID that was thrown.
+  int         thrown_xid;
+
+  /// Optional user-data passed via #cx_throw.
+  void       *user_data;
+};
+
+////////// public extern functions ////////////////////////////////////////////
 
 /**
  * Begins a "try" block to be followed by zero or more #cx_catch blocks and
@@ -520,6 +527,8 @@ inline void* cx_user_data( void ) {
 
 /// @endcond
 
+////////// implementation enums ///////////////////////////////////////////////
+
 /**
  * Internal state of by \ref cx_impl_try_block.
  */
@@ -530,9 +539,13 @@ enum cx_impl_state {
   CX_IMPL_CAUGHT,                       ///< Exception caught.
   CX_IMPL_FINALLY                       ///< Running #cx_finally code, if any.
 };
-typedef enum cx_impl_state cx_impl_state_t;
 
-typedef struct cx_impl_try_block cx_impl_try_block_t;
+////////// implementation typedefs ////////////////////////////////////////////
+
+typedef enum    cx_impl_state     cx_impl_state_t;
+typedef struct  cx_impl_try_block cx_impl_try_block_t;
+
+////////// implementation structs /////////////////////////////////////////////
 
 /**
  * Internal state of #cx_try block.
@@ -550,6 +563,8 @@ struct cx_impl_try_block {
   unsigned              try_condition_calls;
 #endif /* NDEBUG */
 };
+
+////////// implementation extern functions ////////////////////////////////////
 
 /**
  * Catches exception \a xid.

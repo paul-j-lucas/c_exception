@@ -157,10 +157,10 @@ typedef void (*cx_terminate_handler_t)( cx_exception_t const *cex );
  *  cx_try {
  *    // ...
  *  }
- *  cx_catch( EX_FILE_NOT_FOUND ) {
+ *  cx_catch ( EX_FILE_NOT_FOUND ) {
  *    // handle file-not-found specifically
  *  }
- *  cx_catch( EX_FILE_ANY ) {
+ *  cx_catch ( EX_FILE_ANY ) {
  *    // handle any other file error
  *  }
  *  ```
@@ -187,7 +187,7 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  *    // ...
  *    ++n;
  *  }
- *  cx_catch( EX_FILE_NOT_FOUND ) {
+ *  cx_catch ( EX_FILE_NOT_FOUND ) {
  *    // ...
  *  }
  *  printf( "n = %d\n", n );
@@ -250,19 +250,16 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  *
  *  1. With an exception ID:
  *      @code
- *      cx_catch( EX_FILE_NOT_FOUND ) {
+ *      cx_catch ( EX_FILE_NOT_FOUND ) {
  *      @endcode
  *     that catches the given exception ID.
  *
  *  2. With no exception ID:
  *      @code
- *      cx_catch() {
+ *      cx_catch () {
  *      @endcode
  *     that catches any exception like the C++ `...` does.
  * @endparblock
- *
- * @note Unlike the C++ equivalent, the `()` are _required_ with _no_ space
- * between the <code>%cx_catch</code> and the `(`.
  *
  * @note For a given #cx_try block, there may be zero or more
  * <code>%cx_catch</code> blocks.  However, if there are zero, there _must_ be
@@ -329,13 +326,13 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  *
  *  1. With an exception ID:
  *     @code
- *      cx_throw( EX_FILE_NOT_FOUND );
+ *      cx_throw ( EX_FILE_NOT_FOUND );
  *     @endcode
  *     that throws a new exception.  It may be any non-zero value.
  *
  *  2. With an exception ID and user-data:
  *     @code
- *      cx_throw( EX_FILE_NOT_FOUND, path );
+ *      cx_throw ( EX_FILE_NOT_FOUND, path );
  *     @endcode
  *     that throws a new exception passing `path` as a `void*` argument.
  *
@@ -346,9 +343,6 @@ typedef bool (*cx_xid_matcher_t)( int thrown_xid, int catch_xid );
  *     that rethrows the most recent exception with the same user-data, if any.
  *     If no exception has been caught, calls cx_terminate().
  * @endparblock
- *
- * @note Unlike C++, the `()` are _required_ with _no_ space between the
- * <code>%cx_throw</code> and the `(`.
  *
  * @warning If user-data is supplied and it's an actual pointer, the object to
  * which it points must _not_ be a local variable that will go out of scope.

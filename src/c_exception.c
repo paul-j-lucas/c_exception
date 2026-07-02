@@ -186,16 +186,16 @@ bool cx_impl_catch( int catch_xid, cx_impl_try_block_t *tb ) {
     //
     //      try {
     //        try {
-    //          throw( XID_1 );         // 1
+    //          throw ( XID_1 );        // 1
     //        }
-    //        catch( XID_1 ) {          // 2
+    //        catch ( XID_1 ) {         // 2
     //          throw();                // 3
     //        }
     //        finally {                 // 4
     //          // ...
     //        }
     //      }
-    //      catch( XID_1 ) {            // 5
+    //      catch ( XID_1 ) {           // 5
     //        // ...
     //      }
     //

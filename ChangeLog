@@ -1,3 +1,21 @@
+2026-07-02  Paul J. Lucas <paul@lucasmail.org>
+
+   * c_exception.h: Removed incorrect comments about no space being required.
+
+2026-05-27  Paul J. Lucas <paul@lucasmail.org>
+
+   * src/Makefile.am: Added -D_GL_CONFIG_H_INCLUDED to TIDY_CFLAGS to work
+     around config.h not being included.
+
+2026-05-26  Paul J. Lucas <paul@lucasmail.org>
+
+   * src/Makefile.am: Better way to invoke include-tidy from a Makefile.
+
+2026-05-18  Paul J. Lucas <paul@lucasmail.org>
+
+   * src/Makefile.am, c_exception.c, c_exception_test.c, include-tidy.toml: Now
+     using include-tidy.
+
 2026-02-27  Paul J. Lucas <paul@lucasmail.org>
 
    * configure.ac, src/Makefile.am: Now using LT_CURRENT, etc.
